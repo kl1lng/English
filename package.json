@@ -1,0 +1,29 @@
+{
+  "name": "kazakh-speaking-booster",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n WEB,API -c cyan,green \"vite\" \"node server/index.js\"",
+    "server": "node server/index.js",
+    "build": "vite build",
+    "start": "node server/index.js",
+    "dev:web": "vite"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.2.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.5",
+    "express": "^5.2.1",
+    "lucide-react": "^1.52.0",
+    "multer": "^2.4.0",
+    "openai": "^7.28.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "vite": "^7.3.6"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "prettier": "^3.9.9"
+  }
+}
