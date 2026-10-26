@@ -206,7 +206,7 @@ function App() {
       .then((r) => r.json())
       .then((d) => {
         setApiAvailable(true);
-        setAiAvailable(Boolean(d.ai));
+        setAiAvailable(Boolean(d.speechFeedback || (token && d.ai)));
       })
       .catch(() => setApiAvailable(false));
     if (token)
@@ -246,14 +246,15 @@ function App() {
     setPage("home");
     setToast("You are signed out.");
   }
-  function markDemoDone(seconds) {
+  function markDemoDone(seconds, processedFeedback = null) {
     const attemptNumber =
       1 +
       (user.submissions || []).filter(
         (submission) => Number(submission.lessonIndex) === selected,
       ).length;
     const demoFeedback = {
-      ...createNoTranscriptFeedback(lessons[selected], seconds),
+      ...(processedFeedback?.feedback ||
+        createNoTranscriptFeedback(lessons[selected], seconds)),
       attemptNumber,
     };
     setUser((old) => {
@@ -302,8 +303,13 @@ function App() {
             recordingDuration: Math.round(seconds),
             recordingTimestamp: new Date().toISOString(),
             attemptNumber,
-            consentStatus: "not-granted",
-            detectedVocabulary: [],
+            consentStatus: processedFeedback
+              ? "cloudflare-processed-transiently"
+              : "not-granted",
+            detectedVocabulary:
+              processedFeedback?.detectedVocabulary ||
+              demoFeedback.vocabulary?.detected ||
+              [],
             feedback: attemptFeedback,
           },
         ],
@@ -313,7 +319,7 @@ function App() {
     return demoFeedback;
   }
   async function submitAnswer(blob, seconds, aiConsent = false) {
-    if (!token || !apiAvailable) {
+    if (!apiAvailable) {
       return markDemoDone(seconds);
     }
     const body = new FormData();
@@ -321,6 +327,22 @@ function App() {
     body.append("lessonIndex", selected);
     body.append("duration", seconds);
     body.append("aiConsent", String(aiConsent));
+    if (!token) {
+      if (!aiAvailable || !aiConsent) return markDemoDone(seconds);
+      try {
+        const res = await fetch(`${API}/feedback`, { method: "POST", body });
+        const data = await res.json();
+        if (!res.ok) {
+          setToast(data.error || "Your answer could not be processed.");
+          return null;
+        }
+        const result = markDemoDone(seconds, data);
+        return { ...result, transcript: data.transcript || "" };
+      } catch {
+        setToast("Could not reach the speech feedback service. Please try again.");
+        return null;
+      }
+    }
     try {
       const res = await fetch(`${API}/submissions`, {
         method: "POST",
@@ -1880,11 +1902,11 @@ function LessonModal({
                       />
                       <span>
                         With a parent or teacher’s permission, send this clip to
-                        OpenAI for transcription and feedback. The audio is
-                        deleted after processing. Transcript text is kept for up
-                        to 90 days, then deleted; the feedback and progress
-                        metrics stay with this attempt. Pronunciation is not
-                        scored.
+                        the connected AI service for transcription and feedback.
+                        The audio is deleted after processing. Signed-in attempts
+                        may retain the transcript for up to 90 days; demo
+                        feedback is kept only in this browser session. Do not
+                        include personal details. Pronunciation is not scored.
                       </span>
                     </label>
                   )}

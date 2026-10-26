@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { lessons } from "../src/lessons.js";
+import { createCloudflareSpeakingFeedback } from "./cloudflare-ai.js";
 import {
   createNoTranscriptFeedback,
   createTranscriptFeedback,
@@ -156,8 +157,57 @@ const userSummary = (user) => {
   };
 };
 app.get("/api/health", (_, res) =>
-  res.json({ ok: true, ai: Boolean(process.env.OPENAI_API_KEY) }),
+  res.json({
+    ok: true,
+    ai: Boolean(process.env.OPENAI_API_KEY),
+    speechFeedback: Boolean(
+      process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN,
+    ),
+  }),
 );
+const feedbackUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 4 * 1024 * 1024 },
+  fileFilter: (_, file, done) => done(null, file.mimetype.startsWith("audio/")),
+});
+app.post("/api/feedback", (req, res) => {
+  feedbackUpload.single("audio")(req, res, async (error) => {
+    if (error) {
+      const tooLarge = error.code === "LIMIT_FILE_SIZE";
+      return res.status(tooLarge ? 413 : 400).json({
+        error: tooLarge
+          ? "This recording is too large. Please try a shorter clip."
+          : "Please upload a supported audio recording.",
+      });
+    }
+    if (!process.env.CLOUDFLARE_ACCOUNT_ID || !process.env.CLOUDFLARE_API_TOKEN)
+      return res
+        .status(503)
+        .json({ error: "Cloudflare speech feedback is not configured yet." });
+    const index = Number(req.body?.lessonIndex);
+    const duration = Number(req.body?.duration);
+    const lesson = lessons[index];
+    if (!req.file || !lesson)
+      return res.status(400).json({ error: "Choose a lesson and record an answer first." });
+    if (req.body?.aiConsent !== "true")
+      return res.status(403).json({ error: "Adult permission is required before AI processing." });
+    if (!Number.isFinite(duration) || duration < 1 || duration > lesson.maxDurationSeconds)
+      return res.status(400).json({ error: "The recording duration is outside this lesson’s limit." });
+    try {
+      const result = await createCloudflareSpeakingFeedback({
+        audio: req.file.buffer,
+        duration,
+        lesson,
+      });
+      return res.json(result);
+    } catch (failure) {
+      console.error("Cloudflare speech feedback unavailable:", failure.message);
+      return res.status(502).json({
+        error: "Cloudflare could not process this recording. Please try again later.",
+      });
+    }
+  });
+});
 app.get("/api/lessons", (_, res) => res.json(lessons));
 app.post("/api/auth/register", async (req, res) => {
   try {
@@ -313,10 +363,25 @@ app.post("/api/submissions", auth, receiveAudio, async (req, res) => {
   let transcript = "",
     feedback = createNoTranscriptFeedback(lesson, duration),
     ai = false,
-    sentToOpenAI = false;
+    sentToOpenAI = false,
+    sentToCloudflare = false;
   const permissionConfirmed = req.body.aiConsent === "true";
   try {
-    if (process.env.OPENAI_API_KEY && permissionConfirmed) {
+    if (
+      process.env.CLOUDFLARE_ACCOUNT_ID &&
+      process.env.CLOUDFLARE_API_TOKEN &&
+      permissionConfirmed
+    ) {
+      sentToCloudflare = true;
+      const result = await createCloudflareSpeakingFeedback({
+        audio: fs.readFileSync(req.file.path),
+        duration,
+        lesson,
+      });
+      transcript = result.transcript;
+      feedback = result.feedback;
+      ai = Boolean(feedback.ai);
+    } else if (process.env.OPENAI_API_KEY && permissionConfirmed) {
       sentToOpenAI = true;
       const OpenAI = (await import("openai")).default;
       const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -445,6 +510,7 @@ app.post("/api/submissions", auth, receiveAudio, async (req, res) => {
     consentStatus: {
       permissionConfirmed,
       sentToOpenAI,
+      sentToCloudflare,
       transcriptStored: Boolean(transcript),
       audioDeletedAfterProcessing: true,
     },

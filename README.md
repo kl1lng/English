@@ -30,6 +30,8 @@ When a key is configured, transcript-based review is optional and requires the s
 
 On Vercel, `/api/health` and `/api/chat` run as serverless functions. The chat works without an API key using its built-in demo responses. Setting `OPENAI_API_KEY` enables OpenAI chat and incurs separate, usage-based OpenAI charges; Vercel Hobby hosting does not include those model calls. Do not set this key until usage limits and abuse controls are configured.
 
+Vercel also supports transient speech feedback at `/api/feedback` using Cloudflare Workers AI Whisper and a text model. Configure `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` as server-side Vercel environment variables; the token needs Account > Workers AI > Read permission. The route requires explicit adult-permission confirmation, limits recordings to 4 MB, and does not save the recording or transcript on Vercel. For persistent signed-in submissions on the local Express server, the existing submission route can use the same Cloudflare configuration. Workers AI Free has a daily quota; calls stop when the quota is exhausted. Accounts on a paid Workers plan can incur usage charges beyond the free allocation, so keep the Cloudflare account on Free if a hard no-charge limit is required.
+
 Without an API key, account, lesson, streak, and certificate flows still work. Feedback reports duration and a next goal without inventing transcript-based scores or corrections.
 
 ## What is included
@@ -51,9 +53,9 @@ Without an API key, account, lesson, streak, and certificate flows still work. F
 - **Frontend:** React, Vite, Lucide icons, responsive CSS
 - **API:** Express, JSON persistence for the local prototype, Multer for temporary audio uploads
 - **AI (optional):** OpenAI speech transcription and age-appropriate text feedback
-- **API routes:** `/api/health`, `/api/lessons`, `/api/auth/register`, `/api/auth/login`, `/api/me`, `/api/submissions`, `/api/chat`
+- **API routes:** `/api/health`, `/api/lessons`, `/api/auth/register`, `/api/auth/login`, `/api/me`, `/api/submissions`, `/api/chat`, `/api/feedback`
 
-Only `/api/health` and `/api/chat` are currently implemented as Vercel functions. The Express routes for accounts, progress, and speaking submissions still require a persistent database and session design before they can safely run on Vercel.
+On Vercel, `/api/health`, `/api/chat`, and the transient `/api/feedback` endpoint are implemented as functions. The Express routes for accounts, progress, and persistent speaking submissions still require a durable database and session design before they can safely run on Vercel.
 
 The local JSON store and in-memory sessions are suitable for a prototype, not a multi-server production deployment. Before a public school launch, move account data to a managed database, use durable/expiring sessions, configure HTTPS and allowed origins, add account/data deletion and transcript retention controls, and complete the school’s privacy and guardian-consent review. Keep pronunciation scoring explicitly disabled until a suitable assessment provider is integrated.
 
