@@ -1868,6 +1868,24 @@ select:focus-visible {
   color: #93a0ad;
   font-size: 8px;
 }
+.word-sound {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  background: #e3efff;
+  color: #4177b6;
+  cursor: pointer;
+}
+.word-sound:hover,
+.word-sound:focus-visible {
+  background: #c8dcf5;
+  outline: 2px solid #4177b6;
+  outline-offset: 2px;
+}
 .vocab-detail p {
   margin: 5px 0 0;
   color: #6f8193;

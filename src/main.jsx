@@ -48,11 +48,27 @@ import {
   Users,
   Route,
   Leaf,
+  Volume2,
   Waves,
   X,
 } from "lucide-react";
 import { lessons } from "./lessons.js";
 import { createNoTranscriptFeedback } from "./feedback.js";
+
+// Plays the recorded pronunciation from public/audio (file name = lowercase word).
+// If there is no recording for the word, the browser reads it aloud instead.
+function speakWord(term) {
+  const file = `/audio/${term.trim().toLowerCase().replace(/\s+/g, "-")}.m4a`;
+  const fallback = () => {
+    if (!("speechSynthesis" in window)) return;
+    const utter = new SpeechSynthesisUtterance(term);
+    utter.lang = "en-US";
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+  };
+  const audio = new Audio(file);
+  audio.play().catch(fallback);
+}
 import "./styles.css";
 
 import { supabase, supabaseReady } from "./supabase.js";
@@ -1819,6 +1835,14 @@ function LessonModal({
                   <div className="vocab-detail">
                     <div>
                       <b>{activeWord.term}</b>
+                      <button
+                        type="button"
+                        className="word-sound"
+                        aria-label={`Listen to ${activeWord.term}`}
+                        onClick={() => speakWord(activeWord.term)}
+                      >
+                        <Volume2 size={16} />
+                      </button>
                       <span>
                         {activeWord.kk} · {activeWord.ru}
                       </span>
