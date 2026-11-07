@@ -1,68 +1,161 @@
 # Discover Kazakhstan — 30-Day Speaking Booster
 
-A student-first speaking practice app for learners in grades 7–10. Its 30 B1-to-B2 daily cards cover Kazakhstan’s places, history, people, traditions, and tourism. Each card includes a quick fact, speaking questions, six vocabulary items with Kazakh and Russian translations and examples, a duration goal, and a card-specific next step.
+Веб-приложение для ежедневной практики английской речи учениками 7–10 классов. В текущей версии есть 30 тематических уроков о Казахстане, запись коротких ответов, прогресс ученика и сертификат. Проект работает локально и развёртывается на Vercel; облачный пилот с постоянной базой и кабинетом учителя ещё не завершён.
 
-## Run locally
+## Содержание
 
-Requires Node.js 20 or newer.
+- [Где находится проект](#где-находится-проект)
+- [Как запустить локально](#как-запустить-локально)
+- [Как работает версия на Vercel](#как-работает-версия-на-vercel)
+- [Что уже сделано](#что-уже-сделано)
+- [Что ещё предстоит](#что-ещё-предстоит)
+- [AI-функции и ключи](#ai-функции-и-ключи)
+- [Структура кода](#структура-кода)
+- [Связанные обсуждения](#связанные-обсуждения)
+- [Архив старой версии](#архив-старой-версии)
 
-```bash
+## Где находится проект
+
+| Что | Расположение |
+|---|---|
+| Локальная папка проекта | `C:\Users\kulda\Documents\Antoshka` |
+| GitHub-репозиторий | [`kl1lng/English`](https://github.com/kl1lng/English) |
+| Ветка, на которой была просмотрена эта копия | `codex/vercel-chat-api` |
+| Vercel-проект | `30english`, команда `genius-84b0` |
+| Настройки Vercel | [Открыть проект в Vercel](https://vercel.com/genius-84b0/30english) |
+| Переменные окружения Vercel | [Project Settings → Environment Variables](https://vercel.com/genius-84b0/30english/settings/environment-variables) |
+| Preview, упомянутый в истории проекта | [30english-3aenidzmd-genius-84b0.vercel.app](https://30english-3aenidzmd-genius-84b0.vercel.app) |
+
+Адрес Preview найден в истории чатов, но актуальный статус домена не проверялся. Preview — тестовая версия, связанная с веткой/деплоем; Production — отдельная опубликованная версия. Не добавляйте ученические данные в тестовую или общедоступную среду до настройки приватности и доступа.
+
+### Как изменения попадают на Vercel
+
+1. Код редактируется в локальной папке проекта.
+2. Изменения фиксируются в Git и отправляются в GitHub.
+3. Подключённый Vercel-проект собирает деплой из репозитория; Preview предназначен для проверки, Production — для публикации.
+
+История чатов подтверждает, что проект отправляли в `kl1lng/English`, и что Preview собирался. Текущие настройки интеграции и автоматические Git-деплои в Vercel в этой задаче отдельно не открывались, поэтому при необходимости проверьте вкладку **Settings → Git** в проекте Vercel.
+
+## Как запустить локально
+
+Требуется Node.js 20 или новее.
+
+```powershell
+cd C:\Users\kulda\Documents\Antoshka
 npm install
 npm run dev
 ```
 
-Open <http://localhost:5173>. The development command starts the React/Vite client and Express API together. The API stores account and progress data in `server/data/db.json`; uploaded recordings are temporary and deleted after processing.
+Откройте <http://localhost:5173>. Команда `npm run dev` одновременно запускает Vite (интерфейс) и Express (API). Локальный API сохраняет учётные записи и прогресс в `server/data/db.json`; временные аудиофайлы удаляются после обработки. Папка `server/data/` исключена из Git.
 
-For a production-style local run, build and start the API server:
+Запуск собранного приложения:
 
-```bash
+```powershell
 npm run build
 npm start
 ```
 
-Then open <http://localhost:3001>.
+Затем откройте <http://localhost:3001>.
 
-## Optional AI feedback
+## Как работает версия на Vercel
 
-Copy `.env.example` to `.env`, add a server-side `OPENAI_API_KEY`, and restart the app. Never put the key in frontend code or commit `.env`.
+Vercel раздаёт собранный фронтенд и запускает функции из `api/`:
 
-When a key is configured, transcript-based review is optional and requires the student to confirm parent/teacher permission before sending a recording to OpenAI. With permission, the app uses speech-to-text and a language model for content and grammar feedback. The audio file is deleted after processing. Transcript text is kept for up to 90 days and then removed; detected vocabulary, consent status, progress, and feedback remain with the attempt. Without permission or a transcript, only recording duration is assessed, and vocabulary, content, and grammar are explicitly marked as not assessed. Speech recognition can make errors. The app does **not** score pronunciation, speaking rate, or IELTS bands.
+- `GET /api/health` — проверка доступности API;
+- `/api/chat` — чат-помощник с демонстрационными ответами без ключа или с OpenAI при настройке ключа;
+- `/api/feedback` — временная обработка аудио через Cloudflare Workers AI.
 
-On Vercel, `/api/health` and `/api/chat` run as serverless functions. The chat works without an API key using its built-in demo responses. Setting `OPENAI_API_KEY` enables OpenAI chat and incurs separate, usage-based OpenAI charges; Vercel Hobby hosting does not include those model calls. Do not set this key until usage limits and abuse controls are configured.
+**Ограничение текущего облачного деплоя:** Express-сервер из `server/index.js` не превращён в постоянное облачное хранилище. Регистрация, сессии, журнал попыток и прогресс используют локальную JSON-базу/память и не являются надёжными между отдельными Vercel-функциями или деплоями. Для нескольких учеников и учительской статистики нужна постоянная база, серверная авторизация и проверки доступа.
 
-Vercel also supports transient speech feedback at `/api/feedback` using Cloudflare Workers AI Whisper and a text model. Configure `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` as server-side Vercel environment variables; the token needs Account > Workers AI > Read permission. The route requires explicit adult-permission confirmation, limits recordings to 4 MB, and does not save the recording or transcript on Vercel. For persistent signed-in submissions on the local Express server, the existing submission route can use the same Cloudflare configuration. Workers AI Free has a daily quota; calls stop when the quota is exhausted. Accounts on a paid Workers plan can incur usage charges beyond the free allocation, so keep the Cloudflare account on Free if a hard no-charge limit is required.
+## Что уже сделано
 
-Without an API key, account, lesson, streak, and certificate flows still work. Feedback reports duration and a next goal without inventing transcript-based scores or corrections.
+- React-интерфейс на Vite с адаптивной вёрсткой, мобильной навигацией и состояниями разрешения/ошибок микрофона.
+- 30 проверяемых уроков с последовательным B1–B2 прогрессом о местах, истории, людях и традициях Казахстана.
+- В каждой карточке: факт, вопросы для речи, шесть слов с переводами на казахский и русский, примеры и цель по длительности.
+- Последовательное открытие урока: одна активная карточка на календарный день; завершение засчитывается после минимальной длительности.
+- Запись и прослушивание ответа перед отправкой; несколько попыток на текущий урок.
+- Учёт активности и серии дней в часовом поясе `Asia/Oral`.
+- Проверка длительности и словаря; распознавание речи и текстовая обратная связь доступны при соответствующей настройке AI.
+- Англоязычный чат-помощник, просмотр прогресса и сертификат за завершение 30 уроков.
+- Express API с локальным JSON-хранилищем, локальными аккаунтами и сохранением попыток.
+- Vercel-функции для health, чата и временной проверки речи.
+- Старая версия уроков сохранена отдельно в `archive/pre-document-version-2026-10-10/`.
 
-## What is included
+Результаты локальных попыток не следует считать онлайн-статистикой школьного пилота. В истории обсуждался вариант демонстрационных данных для презентации: такие записи допустимы только с явной меткой «демо» и не должны выдаваться за реальные результаты учеников. В текущей проверенной структуре отдельный готовый учительский кабинет/набор демонстрационной статистики не обнаружен.
 
-- Student registration and sign-in with class, school, name, and a scrypt-hashed password
-- Exactly 30 validated Kazakhstan-themed speaking cards with B1-to-B2 progression
-- One active sequential card per calendar day; each lesson has its own speaking-time range
-- Short attempts are saved and count toward activity streaks, but a card is complete only after its minimum speaking time is reached
-- Multiple attempts on the active card are saved; the next card opens on the next calendar day
-- Vocabulary matching normalises case and punctuation and recognises common regular inflections
-- Browser recording and playback before submission
-- Daily activity streaks calculated in the `Asia/Oral` timezone
-- A friendly English-learning chat assistant, including a few offline translation examples
-- Progress tracking and a completion certificate
-- Responsive dashboard, journey view, microphone permission/error states, and mobile navigation
+## Что ещё предстоит
 
-## Architecture
+### Для пилота с реальными учениками
 
-- **Frontend:** React, Vite, Lucide icons, responsive CSS
-- **API:** Express, JSON persistence for the local prototype, Multer for temporary audio uploads
-- **AI (optional):** OpenAI speech transcription and age-appropriate text feedback
-- **API routes:** `/api/health`, `/api/lessons`, `/api/auth/register`, `/api/auth/login`, `/api/me`, `/api/submissions`, `/api/chat`, `/api/feedback`
+- [ ] Принять условия интеграции Neon через Vercel Marketplace и создать PostgreSQL только для Preview. По плану выбран регион Frankfurt (`fra1`); на момент проектирования установка остановилась на принятии условий.
+- [ ] Реализовать миграции базы и долговременное хранение аккаунтов, сессий и попыток.
+- [ ] Сделать одноразовую настройку учителя, вход по ролям и загрузку списка учеников.
+- [ ] Выдавать каждому ученику отдельный короткий временный пароль; хранить только хеш и показывать пароль учителю один раз.
+- [ ] Добавить кабинет учителя со списком своих учеников и статистикой только по фактическим попыткам.
+- [ ] Ограничить ученика просмотром только собственных результатов; добавить сброс пароля и удаление аккаунта/данных.
+- [ ] Проверить хранение и удаление транскриптов, согласие родителя/учителя и школьные требования к данным несовершеннолетних.
+- [ ] Настроить Preview-переменные `DATABASE_URL` и `PILOT_TEACHER_SETUP_CODE`; секреты не коммитить и не отправлять в чат.
+- [ ] Провести проверку на Preview. Не подключать базу к Production и не запускать пилот публично без отдельного решения владельца и проверки требований школы.
 
-On Vercel, `/api/health`, `/api/chat`, and the transient `/api/feedback` endpoint are implemented as functions. The Express routes for accounts, progress, and persistent speaking submissions still require a durable database and session design before they can safely run on Vercel.
+Подробное проектирование и пошаговый план: [`docs/superpowers/specs/2026-10-26-student-pilot-design.md`](docs/superpowers/specs/2026-10-26-student-pilot-design.md) и [`docs/superpowers/plans/2026-10-26-student-pilot.md`](docs/superpowers/plans/2026-10-26-student-pilot.md). В плане эти задачи остаются невыполненными; список выше не означает, что база или кабинет учителя уже созданы.
 
-The local JSON store and in-memory sessions are suitable for a prototype, not a multi-server production deployment. Before a public school launch, move account data to a managed database, use durable/expiring sessions, configure HTTPS and allowed origins, add account/data deletion and transcript retention controls, and complete the school’s privacy and guardian-consent review. Keep pronunciation scoring explicitly disabled until a suitable assessment provider is integrated.
+### Для полноценного публичного запуска
 
-## Previous lesson version
+- Настроить HTTPS, допустимые origins, устойчивые сессии и правила доступа.
+- Подготовить процедуру удаления аккаунта и данных, понятные сроки хранения и процесс согласия родителей/школы.
+- Сохранять аудио только при необходимости и по согласованной политике; сейчас документированная схема предполагает временную обработку и удаление аудио.
+- Не включать оценку произношения: текущая система не измеряет фонемы, скорость речи или баллы IELTS.
+- Настроить лимиты и контроль расходов перед подключением платных AI-вызовов.
 
-The application source from before the Darýn cards and feedback update is preserved in `archive/pre-document-version-2026-10-10/`. Its README describes how to restore the previous frontend and API source without replacing the current database or environment files.
+## AI-функции и ключи
 
-## Product research
+Локально можно скопировать `.env.example` в `.env`. Добавляйте только нужные ключи; файл `.env` исключён из Git. Никогда не помещайте секреты в `src/` или публичные Vite-переменные.
 
-The interaction design draws on public patterns from [FluentAnyLang](https://github.com/Jim-Elijah/fluent-any-lang) (short speaking loops, practice statistics, and clear audio-retention expectations), [Cadence](https://github.com/pstepanovum/Cadence) (guided modules alongside an open-topic coach), [Eloq](https://github.com/KashProgramming/Eloq_speaking_coach) (record → transcript → actionable feedback → progress), and [OpenPronounce](https://github.com/Halleck45/OpenPronounce) (the distinction between transcript feedback and actual phoneme-level pronunciation assessment). This app implements its own Kazakhstan-specific lesson content and interface.
+- `OPENAI_API_KEY` — необязательная расшифровка и текстовая обратная связь локального приложения; отправка записи требует подтверждения разрешения взрослого. Аудио удаляется после обработки, текст транскрипта хранится до 90 дней согласно текущей логике.
+- `CLOUDFLARE_ACCOUNT_ID` и `CLOUDFLARE_API_TOKEN` — необязательная Vercel/локальная обработка через Workers AI; токену требуется разрешение Account → Workers AI → Read. Для Vercel задаются только в серверных Environment Variables.
+- `OPENAI_CHAT_MODEL`, `OPENAI_COACH_MODEL`, `CLOUDFLARE_FEEDBACK_MODEL`, `PORT` — настройки моделей и локального порта; значения по умолчанию заданы в коде/`.env.example`.
+
+AI-проверка не оценивает произношение, беглость или IELTS. Без ключей уроки и основные локальные сценарии работают, а обратная связь ограничивается доступными измерениями и демонстрационными ответами. Платные вызовы OpenAI могут тарифицироваться отдельно; лимиты расходов следует настроить до их включения.
+
+## Структура кода
+
+| Путь | Назначение |
+|---|---|
+| `src/main.jsx` | Основной React-интерфейс: вход, уроки, запись, прогресс, сертификат и чат |
+| `src/lessons.js` | Содержимое и цели 30 уроков |
+| `src/feedback.js` | Локальная оценка длительности и распознанной лексики |
+| `src/styles.css` | Стили и адаптивная вёрстка |
+| `server/index.js` | Локальный Express API, аутентификация и JSON-хранилище |
+| `server/cloudflare-ai.js` | Транскрипция Cloudflare и текстовая обратная связь |
+| `api/health.js` | Vercel health endpoint |
+| `api/chat.js` | Vercel chat function |
+| `api/feedback.js` | Временная Vercel-функция для аудиообратной связи |
+| `docs/superpowers/specs/` | Спецификация пилота учитель/ученик |
+| `docs/superpowers/plans/` | План реализации пилота и его чек-лист |
+| `archive/pre-document-version-2026-10-10/` | Архив старой версии фронтенда и сервера |
+
+Полезные команды:
+
+```bash
+npm run dev    # локальная разработка: Vite + Express
+npm run build  # сборка фронтенда в dist/
+npm start      # запуск локального Express-сервера
+```
+
+## Связанные обсуждения
+
+В истории Codex найдены обсуждения, относящиеся к проекту и лежащие в той же локальной папке:
+
+- **«Создать платформу speaking-практики»** — исходное ТЗ, целевая аудитория, ежедневные карточки, запись, обратная связь, чат, серии активности и сертификат.
+- **«Запушить проект в English»** — работа с GitHub `kl1lng/English`; в продолжении обсуждались вход учеников, создание аккаунтов учителем, статистика, Cloudflare и ограничения Vercel.
+- **«Обнови README по проекту»** — текущий запрос на единое описание подключения, выполненного и будущих работ, а также расположения приложения в Vercel.
+
+Чаты проекта находятся в Codex и могут открываться через поиск по их точным названиям. Из обсуждения ученических аккаунтов следует важное требование: для статистики нужны индивидуальные профили; демонстрационные данные должны быть честно помечены. Технические решения и текущий статус подтверждаются кодом, спецификацией и планом в `docs/`.
+
+## Архив старой версии
+
+Исходники до обновления Darýn-карточек и обратной связи находятся в `archive/pre-document-version-2026-10-10/`. Инструкция по восстановлению — в [README архива](archive/pre-document-version-2026-10-10/README.md). Архивируйте текущую работу отдельно перед ручным восстановлением старых файлов.
+
+## Ориентиры по дизайну
+
+При проектировании изучались открытые решения [FluentAnyLang](https://github.com/Jim-Elijah/fluent-any-lang), [Cadence](https://github.com/pstepanovum/Cadence), [Eloq](https://github.com/KashProgramming/Eloq_speaking_coach) и [OpenPronounce](https://github.com/Halleck45/OpenPronounce). Это ориентиры пользовательских сценариев; уроки о Казахстане и интерфейс приложения созданы для этого проекта.

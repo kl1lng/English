@@ -13,6 +13,44 @@ function cloudflareUrl(model) {
   };
 }
 
+const groqUrl = "https://api.groq.com/openai/v1/chat/completions";
+const defaultGroqModel = "openai/gpt-oss-120b";
+
+// Text feedback: Groq when GROQ_API_KEY is set (free tier), else Cloudflare Workers AI.
+// Whisper transcription always stays on Cloudflare.
+async function requestFeedbackText(messages) {
+  const groqKey = process.env.GROQ_API_KEY;
+  if (groqKey) {
+    const response = await fetch(groqUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${groqKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: process.env.GROQ_FEEDBACK_MODEL || defaultGroqModel,
+        messages,
+        response_format: { type: "json_object" },
+        // gpt-oss spends part of the budget on reasoning, so leave room for the JSON.
+        max_tokens: 1500,
+        temperature: 0.2,
+      }),
+    });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok)
+      throw new Error(`Groq request failed (${response.status}).`);
+    return payload?.choices?.[0]?.message?.content;
+  }
+  const model = process.env.CLOUDFLARE_FEEDBACK_MODEL || defaultFeedbackModel;
+  const result = await runModel(model, {
+    messages,
+    response_format: { type: "json_object" },
+    max_tokens: 420,
+    temperature: 0.2,
+  });
+  return result?.response;
+}
+
 async function runModel(model, body) {
   const { url, token } = cloudflareUrl(model);
   const response = await fetch(url, {
@@ -65,11 +103,8 @@ export async function createCloudflareSpeakingFeedback({
     transcript,
     lesson.targetVocabulary,
   );
-  const model = process.env.CLOUDFLARE_FEEDBACK_MODEL || defaultFeedbackModel;
-
   try {
-    const result = await runModel(model, {
-      messages: [
+    const responseText = await requestFeedbackText([
         {
           role: "system",
           content:
@@ -93,12 +128,8 @@ export async function createCloudflareSpeakingFeedback({
             transcript,
           }),
         },
-      ],
-      response_format: { type: "json_object" },
-      max_tokens: 420,
-      temperature: 0.2,
-    });
-    const review = parseFeedback(result?.response);
+    ]);
+    const review = parseFeedback(responseText);
     const corrections = review.grammarCorrections
       .filter(
         (correction) =>

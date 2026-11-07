@@ -55,6 +55,8 @@ import { lessons } from "./lessons.js";
 import { createNoTranscriptFeedback } from "./feedback.js";
 import "./styles.css";
 
+import { supabase, supabaseReady } from "./supabase.js";
+
 const API = "/api";
 const cx = (...values) => values.filter(Boolean).join(" ");
 const placeIcons = {
@@ -113,7 +115,9 @@ const fallbackUser = {
 
 function App() {
   const [user, setUser] = useState(fallbackUser);
-  const [token, setToken] = useState(localStorage.getItem("kaz-token") || "");
+  const [session, setSession] = useState(null);
+  const token = session?.access_token || "";
+  const profileLoaded = useRef(false);
   const [page, setPage] = useState("home");
   const [modal, setModal] = useState("");
   const [selected, setSelected] = useState(6);
@@ -209,22 +213,75 @@ function App() {
         setAiAvailable(Boolean(d.speechFeedback || (token && d.ai)));
       })
       .catch(() => setApiAvailable(false));
-    if (token)
-      fetch(`${API}/me`, { headers: { Authorization: `Bearer ${token}` } })
-        .then(async (r) => {
-          if (!r.ok) throw new Error();
-          setUser(await r.json());
-        })
-        .catch(() => {
-          localStorage.removeItem("kaz-token");
-          setToken("");
-        });
   }, []);
+  useEffect(() => {
+    if (!supabase) return;
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data } = supabase.auth.onAuthStateChange((_event, next) =>
+      setSession(next),
+    );
+    return () => data.subscription.unsubscribe();
+  }, []);
+  useEffect(() => {
+    if (!supabase || !session) {
+      profileLoaded.current = false;
+      return;
+    }
+    profileLoaded.current = false;
+    supabase
+      .from("profiles")
+      .select("name, data")
+      .eq("id", session.user.id)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (error) {
+          setToast("Could not load your progress. Please try again.");
+          return;
+        }
+        setUser({
+          ...fallbackUser,
+          ...(data?.data || {}),
+          name: data?.name || session.user.user_metadata?.name || "Learner",
+        });
+        profileLoaded.current = true;
+      });
+    // Reload only when a different user signs in: Supabase also emits auth events on tab
+    // refocus/token refresh with a new session object, which must not refetch the profile.
+  }, [session?.user?.id]);
+  useEffect(() => {
+    if (!supabase || !session || !profileLoaded.current) return;
+    supabase
+      .from("profiles")
+      .update({
+        name: user.name,
+        data: user,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", session.user.id)
+      .then(({ error }) => {
+        if (error) setToast("Your progress could not be saved. Check your connection.");
+      });
+  }, [user, session]);
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(""), 2600);
     return () => clearTimeout(t);
   }, [toast]);
+
+  // Stable identity: LessonModal resets its shown feedback whenever this changes,
+  // so a fresh object on every render would hide the "Send my answer" button.
+  const lessonFeedback = useMemo(() => {
+    const latest = user.submissions
+      ?.filter((s) => Number(s.lessonIndex) === selected)
+      .at(-1);
+    return latest
+      ? {
+          ...latest.feedback,
+          transcript: latest.transcript || "",
+          attemptNumber: latest.attemptNumber || 1,
+        }
+      : null;
+  }, [user.submissions, selected]);
 
   function openLesson(i) {
     setSelected(i);
@@ -232,17 +289,14 @@ function App() {
     setModal("lesson");
     setMenuOpen(false);
   }
-  function handleAuth(data) {
-    setUser(data.user);
-    setToken(data.token);
-    localStorage.setItem("kaz-token", data.token);
+  function handleAuth(name) {
     setModal("");
-    setToast(`Welcome, ${data.user.name.split(" ")[0]}!`);
+    setToast(`Welcome, ${(name || "friend").split(" ")[0]}!`);
   }
-  function signOut() {
+  async function signOut() {
+    await supabase?.auth.signOut();
+    setSession(null);
     setUser(fallbackUser);
-    setToken("");
-    localStorage.removeItem("kaz-token");
     setPage("home");
     setToast("You are signed out.");
   }
@@ -322,47 +376,25 @@ function App() {
     if (!apiAvailable) {
       return markDemoDone(seconds);
     }
+    // Same path for everyone: feedback is produced transiently, then progress is saved
+    // to the learner's profile by the effect above (signed-in users only).
+    if (!aiAvailable || !aiConsent) return markDemoDone(seconds);
     const body = new FormData();
     body.append("audio", blob, "speaking-answer.webm");
     body.append("lessonIndex", selected);
     body.append("duration", seconds);
     body.append("aiConsent", String(aiConsent));
-    if (!token) {
-      if (!aiAvailable || !aiConsent) return markDemoDone(seconds);
-      try {
-        const res = await fetch(`${API}/feedback`, { method: "POST", body });
-        const data = await res.json();
-        if (!res.ok) {
-          setToast(data.error || "Your answer could not be processed.");
-          return null;
-        }
-        const result = markDemoDone(seconds, data);
-        return { ...result, transcript: data.transcript || "" };
-      } catch {
-        setToast("Could not reach the speech feedback service. Please try again.");
-        return null;
-      }
-    }
     try {
-      const res = await fetch(`${API}/submissions`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body,
-      });
+      const res = await fetch(`${API}/feedback`, { method: "POST", body });
       const data = await res.json();
       if (!res.ok) {
-        setToast(data.error || "Your answer could not be submitted.");
+        setToast(data.error || "Your answer could not be processed.");
         return null;
       }
-      setUser(data.user);
-      setFeedback(data.submission.feedback);
-      return {
-        ...data.submission.feedback,
-        transcript: data.submission.transcript || "",
-        attemptNumber: data.submission.attemptNumber || 1,
-      };
+      const result = markDemoDone(seconds, data);
+      return { ...result, transcript: data.transcript || "" };
     } catch {
-      setToast("Could not reach the server. Your answer was not submitted.");
+      setToast("Could not reach the speech feedback service. Please try again.");
       return null;
     }
   }
@@ -720,18 +752,7 @@ function App() {
           index={selected}
           onClose={() => setModal("")}
           key={selected}
-          feedback={(() => {
-            const latest = user.submissions
-              ?.filter((s) => Number(s.lessonIndex) === selected)
-              .at(-1);
-            return latest
-              ? {
-                  ...latest.feedback,
-                  transcript: latest.transcript || "",
-                  attemptNumber: latest.attemptNumber || 1,
-                }
-              : null;
-          })()}
+          feedback={lessonFeedback}
           submitAnswer={submitAnswer}
           completed={completed.has(selected)}
           canRecord={
@@ -1354,33 +1375,50 @@ function Certificate({ user, completedCount, setPage }) {
 function AuthModal({ mode, setMode, onClose, onAuth, onSignOut, user, token }) {
   const [values, setValues] = useState({
     name: "",
-    grade: "8",
-    school: "",
+    email: "",
     password: "",
   });
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   async function submit(e) {
     e.preventDefault();
     setError("");
+    setNotice("");
+    if (!supabase) {
+      setError("Accounts are not configured yet.");
+      return;
+    }
     setBusy(true);
     try {
-      const r = await fetch(
-        `${API}/auth/${mode === "register" ? "register" : "login"}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        },
-      );
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.error);
-      onAuth(d);
-    } catch (e) {
+      if (mode === "register") {
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email: values.email.trim(),
+          password: values.password,
+          options: { data: { name: values.name.trim() } },
+        });
+        if (signUpError) throw signUpError;
+        if (data.session) {
+          onAuth(values.name.trim());
+        } else {
+          setNotice(
+            "Check your email and click the confirmation link, then sign in.",
+          );
+        }
+      } else {
+        const { data, error: signInError } =
+          await supabase.auth.signInWithPassword({
+            email: values.email.trim(),
+            password: values.password,
+          });
+        if (signInError) throw signInError;
+        onAuth(data.user?.user_metadata?.name);
+      }
+    } catch (err) {
       setError(
-        e.message === "Failed to fetch"
-          ? "The server is not running yet. Start it with npm run server."
-          : e.message,
+        err.message === "Invalid login credentials"
+          ? "Wrong email or password."
+          : err.message,
       );
     } finally {
       setBusy(false);
@@ -1449,59 +1487,33 @@ function AuthModal({ mode, setMode, onClose, onAuth, onSignOut, user, token }) {
               </button>
             </div>
             <form onSubmit={submit}>
-              <label>
-                Your name
-                <input
-                  autoComplete="name"
-                  required
-                  value={values.name}
-                  onChange={(e) =>
-                    setValues({ ...values, name: e.target.value })
-                  }
-                  placeholder="e.g. Antoshka S."
-                />
-              </label>
               {mode === "register" && (
-                <div className="auth-row">
-                  <label>
-                    Your class
-                    <select
-                      value={values.grade}
-                      onChange={(e) =>
-                        setValues({ ...values, grade: e.target.value })
-                      }
-                    >
-                      {[7, 8, 9, 10].map((g) => (
-                        <option key={g}>{g}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    School
-                    <input
-                      required
-                      value={values.school}
-                      onChange={(e) =>
-                        setValues({ ...values, school: e.target.value })
-                      }
-                      placeholder="Your school"
-                    />
-                  </label>
-                </div>
-              )}
-              {mode === "login" && (
                 <label>
-                  School
+                  Your name
                   <input
+                    autoComplete="name"
                     required
-                    value={values.school}
+                    value={values.name}
                     onChange={(e) =>
-                      setValues({ ...values, school: e.target.value })
+                      setValues({ ...values, name: e.target.value })
                     }
-                    placeholder="Your school"
+                    placeholder="e.g. Aigerim"
                   />
                 </label>
               )}
+              <label>
+                Email
+                <input
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={values.email}
+                  onChange={(e) =>
+                    setValues({ ...values, email: e.target.value })
+                  }
+                  placeholder="you@example.com"
+                />
+              </label>
               <label>
                 Password
                 <input
@@ -1519,6 +1531,7 @@ function AuthModal({ mode, setMode, onClose, onAuth, onSignOut, user, token }) {
                 />
               </label>
               {error && <div className="auth-error">{error}</div>}
+              {notice && <div className="auth-error">{notice}</div>}
               <button className="auth-submit" disabled={busy}>
                 {busy
                   ? "One moment…"
@@ -1580,7 +1593,8 @@ function LessonModal({
     },
     [],
   );
-  useEffect(() => setShownFeedback(feedback), [feedback]);
+  // Re-sync only when a new attempt is saved, not on every parent re-render.
+  useEffect(() => setShownFeedback(feedback), [feedback?.attemptNumber]);
   async function start() {
     setError("");
     if (!navigator.mediaDevices?.getUserMedia) {
