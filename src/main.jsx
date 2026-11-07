@@ -113,9 +113,21 @@ const fallbackUser = {
   submissions: [],
 };
 
+// What a brand-new registered learner starts with (no demo progress).
+const emptyUser = {
+  name: "Learner",
+  completed: 0,
+  streak: 0,
+  bestStreak: 0,
+  days: [],
+  submissions: [],
+};
+
 function App() {
-  const [user, setUser] = useState(fallbackUser);
+  // With accounts configured, nobody sees the sample profile: people sign in first.
+  const [user, setUser] = useState(supabaseReady ? emptyUser : fallbackUser);
   const [session, setSession] = useState(null);
+  const [authChecked, setAuthChecked] = useState(!supabaseReady);
   const token = session?.access_token || "";
   const profileLoaded = useRef(false);
   const [page, setPage] = useState("home");
@@ -216,7 +228,10 @@ function App() {
   }, []);
   useEffect(() => {
     if (!supabase) return;
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setAuthChecked(true);
+    });
     const { data } = supabase.auth.onAuthStateChange((_event, next) =>
       setSession(next),
     );
@@ -239,7 +254,7 @@ function App() {
           return;
         }
         setUser({
-          ...fallbackUser,
+          ...emptyUser,
           ...(data?.data || {}),
           name: data?.name || session.user.user_metadata?.name || "Learner",
         });
@@ -296,7 +311,7 @@ function App() {
   async function signOut() {
     await supabase?.auth.signOut();
     setSession(null);
-    setUser(fallbackUser);
+    setUser(emptyUser);
     setPage("home");
     setToast("You are signed out.");
   }
@@ -444,6 +459,23 @@ function App() {
       setToast("Complete all 30 days to earn your certificate!");
   }
 
+  if (!authChecked) return <div className="app-shell" aria-busy="true" />;
+  if (supabaseReady && !session)
+    return (
+      <div className="app-shell">
+        <AuthModal
+          required
+          mode={authMode}
+          setMode={setAuthMode}
+          onClose={() => {}}
+          onAuth={handleAuth}
+          onSignOut={signOut}
+          user={user}
+          token={token}
+        />
+      </div>
+    );
+
   return (
     <div className="app-shell">
       <aside className={cx("sidebar", menuOpen && "sidebar-open")}>
@@ -523,9 +555,7 @@ function App() {
           <div className="profile-mini-text">
             <b>{user.name}</b>
             <small>
-              {token
-                ? `Class ${user.grade || "8"} · Explorer`
-                : `Sample profile · class ${user.grade || "8"}`}
+              {token ? "Explorer" : "Sample profile"}
             </small>
           </div>
           <button
@@ -1372,7 +1402,16 @@ function Certificate({ user, completedCount, setPage }) {
   );
 }
 
-function AuthModal({ mode, setMode, onClose, onAuth, onSignOut, user, token }) {
+function AuthModal({
+  mode,
+  setMode,
+  onClose,
+  onAuth,
+  onSignOut,
+  user,
+  token,
+  required = false,
+}) {
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -1432,9 +1471,11 @@ function AuthModal({ mode, setMode, onClose, onAuth, onSignOut, user, token }) {
       }}
     >
       <div className="auth-modal">
-        <button className="modal-x" onClick={onClose}>
-          <X size={19} />
-        </button>
+        {!required && (
+          <button className="modal-x" onClick={onClose}>
+            <X size={19} />
+          </button>
+        )}
         {token ? (
           <>
             <div className="auth-brand">
@@ -1463,7 +1504,7 @@ function AuthModal({ mode, setMode, onClose, onAuth, onSignOut, user, token }) {
             </h2>
             <p>
               {mode === "register"
-                ? "Create a student profile and keep every new word and little victory."
+                ? "Create your profile and keep every new word and little victory."
                 : "Pick up right where you left off."}
             </p>
             <div className="auth-tabs">
