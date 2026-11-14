@@ -22,6 +22,7 @@
     "openai": "^7.28.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "ts-fsrs": "^6.0.0",
     "vite": "^7.3.6"
   },
   "devDependencies": {

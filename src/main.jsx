@@ -18,6 +18,7 @@ import {
   Flower2,
   Heart,
   Headphones,
+  Layers,
   Home,
   Landmark,
   LockKeyhole,
@@ -74,6 +75,8 @@ import "./styles.css";
 import { supabase, supabaseReady } from "./supabase.js";
 import { dayKey } from "./lib/time.js";
 import { advanceStreak } from "./lib/streak.js";
+import { useWordCards } from "./hooks/useWordCards.js";
+import Review, { ReviewDeckSummary } from "./components/Review.jsx";
 
 const API = "/api";
 const cx = (...values) => values.filter(Boolean).join(" ");
@@ -225,6 +228,16 @@ function App() {
       };
     });
   }, [user]);
+
+  const completedIndexes = useMemo(
+    () => [...completed].sort((a, b) => a - b),
+    [completed],
+  );
+  const deck = useWordCards({
+    supabase,
+    userId: session?.user?.id || null,
+    completedIndexes,
+  });
 
   useEffect(() => {
     fetch(`${API}/health`)
@@ -526,6 +539,13 @@ function App() {
             <span className="nav-badge">30</span>
           </button>
           <button
+            onClick={() => navigate("review")}
+            className={cx("nav-link", page === "review" && "active")}
+          >
+            <Layers size={18} />
+            <span>Word review</span>
+          </button>
+          <button
             onClick={() => navigate("certificate")}
             className={cx("nav-link", page === "certificate" && "active")}
           >
@@ -597,7 +617,9 @@ function App() {
                 ? "My dashboard"
                 : page === "journey"
                   ? "30-day journey"
-                  : "My certificate"}
+                  : page === "review"
+                    ? "Word review"
+                    : "My certificate"}
             </b>
           </div>
           <div className="topbar-right">
@@ -628,6 +650,7 @@ function App() {
                 setAuthMode,
                 token,
                 lessons,
+                deck,
               }}
             />
           )}
@@ -641,6 +664,9 @@ function App() {
                 submissions: user.submissions || [],
               }}
             />
+          )}
+          {page === "review" && (
+            <Review {...{ deck, speakWord, navigate, completedCount }} />
           )}
           {page === "certificate" && (
             <Certificate {...{ user, completedCount, setPage }} />
@@ -844,6 +870,7 @@ function Dashboard({
   setAuthMode,
   token,
   lessons,
+  deck,
 }) {
   const todayAttempt = (user.submissions || [])
     .filter((submission) => submission.day === localDateKey())
@@ -894,6 +921,11 @@ function Dashboard({
           <ChevronDown size={14} />
         </button>
       </section>
+      <ReviewDeckSummary
+        rows={deck.rows}
+        status={deck.status}
+        navigate={navigate}
+      />
       <section className="hero-card">
         <div className="hero-photo" />
         <div className="hero-shade" />

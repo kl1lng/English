@@ -7,7 +7,7 @@ export function normalizeWords(value = "") {
   );
 }
 
-function tokenMatches(target, spoken) {
+export function tokenMatches(target, spoken) {
   if (spoken === target) return true;
   if (target.length < 4) return false;
   const variants = new Set([
