@@ -15,6 +15,7 @@ const ratingButtons = [
 
 function cardMode(position, entry) {
   // Rotate flip, fill-the-blank and listening; fall back to flip when a blank is not possible.
+  if (entry?.custom) return "flip"; // your own phrases have no blank or recording
   const slot = position % 3;
   if (slot === 1 && entry && makeCloze(entry.example, entry.term)) return "cloze";
   if (slot === 2 && entry) return "listen";
@@ -77,7 +78,18 @@ export default function Review({
   }
 
   const key = queue?.[position];
-  const entry = key ? wordIndex.get(key) : null;
+  const customTerm = key?.startsWith("c:")
+    ? rows.find((r) => r.word_key === key)?.custom_term || key.slice(2).replace(/-/g, " ")
+    : null;
+  const entry = useMemo(
+    () =>
+      !key
+        ? null
+        : customTerm !== null
+          ? { key, term: customTerm, kk: "", ru: "", example: "", lessonIndex: -1, custom: true }
+          : wordIndex.get(key) || null,
+    [key, customTerm],
+  );
   const mode = key ? cardMode(position, entry) : "flip";
   const cloze = useMemo(
     () => (mode === "cloze" && entry ? makeCloze(entry.example, entry.term) : null),
@@ -260,17 +272,25 @@ export default function Review({
             </button>
           ) : (
             <>
-              <dl className="review-answer">
-                <div>
-                  <dt>Қазақша</dt>
-                  <dd>{entry.kk}</dd>
-                </div>
-                <div>
-                  <dt>Русский</dt>
-                  <dd>{entry.ru}</dd>
-                </div>
-              </dl>
-              <p className="review-example">“{entry.example}”</p>
+              {entry.custom ? (
+                <p className="review-example">
+                  Your own phrase. Say it aloud in a sentence about Kazakhstan, then rate how easily it came.
+                </p>
+              ) : (
+                <>
+                  <dl className="review-answer">
+                    <div>
+                      <dt>Қазақша</dt>
+                      <dd>{entry.kk}</dd>
+                    </div>
+                    <div>
+                      <dt>Русский</dt>
+                      <dd>{entry.ru}</dd>
+                    </div>
+                  </dl>
+                  <p className="review-example">“{entry.example}”</p>
+                </>
+              )}
               <p className="review-ask">How well did you remember it?</p>
               <div className="review-rates">
                 {ratingButtons.map((b) => (

@@ -834,6 +834,8 @@ function App() {
             <Dialogue
               {...{ token, aiAvailable, completedCount, navigate }}
               onFinished={saveDialogue}
+              onAddPhrases={deck.addCustom}
+              canAddPhrases={deck.canAddCustom && deck.status === "ready"}
             />
           )}
           {page === "achievements" && (

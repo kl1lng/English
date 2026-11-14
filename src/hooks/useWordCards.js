@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { deckKeysForLessons } from "../lib/deck.js";
+import { customKey, deckKeysForLessons } from "../lib/deck.js";
 import { newCard, reviewRow, State } from "../lib/srs.js";
 import { dayKey } from "../lib/time.js";
 
@@ -32,6 +32,7 @@ export function useWordCards({ supabase, userId, completedIndexes }) {
   const [status, setStatus] = useState("loading");
   const [byKey, setByKey] = useState({});
   const [saveError, setSaveError] = useState(false);
+  const [customOk, setCustomOk] = useState(false);
   const ready = useRef(false);
 
   const persist = useCallback(
@@ -80,10 +81,19 @@ export function useWordCards({ supabase, userId, completedIndexes }) {
       return;
     }
     (async () => {
-      const { data, error } = await supabase
+      // Custom phrases need migration 006; without it the deck still loads (lesson words only).
+      let { data, error } = await supabase
         .from("word_cards")
-        .select(CARD_FIELDS)
+        .select(`${CARD_FIELDS}, custom_term, custom_example`)
         .eq("user_id", userId);
+      if (error) {
+        ({ data, error } = await supabase
+          .from("word_cards")
+          .select(CARD_FIELDS)
+          .eq("user_id", userId));
+      } else {
+        setCustomOk(true);
+      }
       if (cancelled) return;
       if (error) {
         setStatus("unavailable");
@@ -161,6 +171,34 @@ export function useWordCards({ supabase, userId, completedIndexes }) {
     [byKey, supabase, userId, persist],
   );
 
+  // Adds phrases from the speaking-partner review to the deck. Returns how many were new.
+  const addCustom = useCallback(
+    (phrases) => {
+      const now = new Date();
+      const created = [];
+      phrases.forEach((text) => {
+        const term = String(text).trim().slice(0, 100);
+        const key = customKey(term);
+        if (!key || byKey[key] || created.some((c) => c.word_key === key)) return;
+        created.push({
+          word_key: key,
+          source: "custom",
+          custom_term: term,
+          custom_example: "",
+          ...newCard(now),
+        });
+      });
+      if (!created.length) return 0;
+      const next = { ...byKey };
+      created.forEach((c) => (next[c.word_key] = c));
+      setByKey(next);
+      if (!supabase || !userId) writeJson(demoKey, next);
+      else persist(created, []);
+      return created.length;
+    },
+    [byKey, supabase, userId, persist],
+  );
+
   const rows = useMemo(() => Object.values(byKey), [byKey]);
   const today = dayKey();
   const doneToday = useMemo(() => {
@@ -174,5 +212,13 @@ export function useWordCards({ supabase, userId, completedIndexes }) {
     return { doneNew, doneReviews };
   }, [rows, today]);
 
-  return { status, rows, submitReview, saveError, doneToday };
+  return {
+    status,
+    rows,
+    submitReview,
+    saveError,
+    doneToday,
+    addCustom,
+    canAddCustom: !supabase || !userId || customOk,
+  };
 }

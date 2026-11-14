@@ -14,6 +14,16 @@ export function buildWordIndex(allLessons = lessons) {
   return index;
 }
 
+// Key for a custom phrase (from the speaking-partner review): "c:" plus a short slug.
+export function customKey(text) {
+  const slug = String(text)
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+  return slug ? `c:${slug}` : "";
+}
+
 // Word keys that should be in the deck for the given completed lesson numbers.
 export function deckKeysForLessons(completedIndexes, allLessons = lessons) {
   const done = new Set(completedIndexes.map(Number));

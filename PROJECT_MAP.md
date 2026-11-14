@@ -47,7 +47,7 @@ Built on 2026-11-14 following `docs/superpowers/plans/2026-11-14-engagement-and-
 - **Telegram reminders** (`api/telegram.js`, `api/remind.js`, `server/telegram.js`, `vercel.json` cron): code and unit tests only. Never run against a real bot.
 - **Tests**: `npm test` (Vitest). Pure logic and API helpers only; the UI was checked by hand.
 
-SQL migrations to run once, in order, in the Supabase SQL Editor (nothing has been run yet): `supabase/migrations/001_foundation.sql` … `005_telegram.sql`. Until a migration is run, the matching screen shows "not set up yet" and everything else keeps working.
+SQL migrations `supabase/migrations/001` … `006` were applied to the `discover-kazakhstan` project on 2026-11-14 through the SQL Editor (7 tables, row-level security on, checked by a read-only query). Row-level security was not tested with real accounts. If a migration is missing, the matching screen shows "not set up yet" and everything else keeps working.
 
 ## Environment variables
 
@@ -90,10 +90,10 @@ New variables for the engagement features (names only): `DAILY_FEEDBACK_LIMIT`, 
 
 ## Known gaps and things to check
 
-- `README.md` and `docs/superpowers/` still describe the old school pilot (grades 7–10, teacher cabinet). They are outdated. School wording also remains in the AI prompts (`server/cloudflare-ai.js`, `api/chat.js`) and a few UI strings by the owner's request; the cleanup (plan task 0.6) is not done.
-- The engagement features have not been tested with a live Supabase project, real AI keys or a real Telegram bot. The speaking partner was only checked through unit tests and the screens; no real recording was sent.
+- `README.md` and `docs/superpowers/` still describe the old school pilot (grades 7–10, teacher cabinet). They are outdated.
+- The engagement features have not been tested with real signed-in accounts, real AI keys or a real Telegram bot (creating test accounts in the live project was blocked, so it is left to the owner). The speaking partner was only checked through unit tests and the screens; no real recording was sent.
 - `vercel.json` adds a daily cron (`/api/remind`, 13:00 UTC). Check that the Vercel plan allows it before merging.
-- Custom phrases from the speaking-partner review are not added to the word deck (word cards only support lesson words).
+- Custom phrases from the speaking-partner review can be added to the word deck (migration 006); they are flip cards only.
 - Streak counts are computed on the client; XP and badges can be edited by the learner. A shared leaderboard would need server-side awarding.
 - Legacy Express auth and submissions code can be removed.
 - Words in the Drive folder "Озвучка 2" that are not in any lesson never appear in the app (for example `crystal-clear`, `symbolise`).

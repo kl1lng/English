@@ -21,7 +21,16 @@ function authHeaders(token) {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-export default function Dialogue({ token, aiAvailable, completedCount, onFinished, navigate }) {
+export default function Dialogue({
+  token,
+  aiAvailable,
+  completedCount,
+  onFinished,
+  navigate,
+  onAddPhrases,
+  canAddPhrases,
+}) {
+  const [added, setAdded] = useState(null);
   const [scenario, setScenario] = useState(null);
   const [consent, setConsent] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -54,6 +63,7 @@ export default function Dialogue({ token, aiAvailable, completedCount, onFinishe
     setMessages([{ role: "ai", text: s.opening }]);
     setHint("");
     setSummary(null);
+    setAdded(null);
     setTurn(1);
     setError("");
     setPhase("idle");
@@ -275,6 +285,19 @@ export default function Dialogue({ token, aiAvailable, completedCount, onFinishe
             <>
               <h3>Useful phrases</h3>
               <ul>{summary.phrases.map((p) => <li key={p}>{p}</li>)}</ul>
+              {canAddPhrases && (
+                <button
+                  className="dlg-secondary"
+                  disabled={added !== null}
+                  onClick={() => setAdded(onAddPhrases(summary.phrases))}
+                >
+                  {added === null
+                    ? "Add these phrases to word review"
+                    : added > 0
+                      ? `Added ${added} phrase${added === 1 ? "" : "s"} to word review`
+                      : "Already in word review"}
+                </button>
+              )}
             </>
           )}
           <div className="dlg-actions">

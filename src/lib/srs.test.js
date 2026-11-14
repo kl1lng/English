@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { lessons } from "../lessons.js";
 import { buildChoices, makeCloze } from "./cloze.js";
-import { buildWordIndex, deckKeysForLessons } from "./deck.js";
+import { buildWordIndex, customKey, deckKeysForLessons } from "./deck.js";
 import { newCard, pickSession, reviewRow, Rating, wordKey, dueCount } from "./srs.js";
 
 const now = new Date("2026-11-14T10:00:00Z");
@@ -54,6 +54,15 @@ describe("pickSession", () => {
     ]);
     expect(pickSession(rows, now, { maxNew: 0 }).length).toBe(2);
     expect(dueCount(rows, now)).toBe(4);
+  });
+});
+
+describe("customKey", () => {
+  it("makes a stable short key for a phrase", () => {
+    expect(customKey("It is famous for…")).toBe("c:it-is-famous-for");
+    expect(customKey("  I would RECOMMEND  ")).toBe("c:i-would-recommend");
+    expect(customKey("???")).toBe("");
+    expect(customKey("x".repeat(200)).length).toBeLessThanOrEqual(62);
   });
 });
 
