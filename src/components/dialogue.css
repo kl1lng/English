@@ -135,8 +135,8 @@
 .dlg-listen {
   display: inline-grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   margin-top: 4px;
   border: 1px solid var(--line);
   border-radius: 50%;
@@ -191,7 +191,7 @@
   padding: 12px 22px;
   border: 0;
   border-radius: 14px;
-  background: var(--blue);
+  background: var(--blue-strong);
   color: #fff;
   font-size: 16px;
   font-weight: 700;

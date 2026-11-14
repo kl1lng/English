@@ -32,7 +32,7 @@
 }
 .games-tabs button,
 .games-lang button {
-  min-height: 40px;
+  min-height: 44px;
   padding: 8px 14px;
   border: 0;
   border-radius: 9px;
@@ -152,7 +152,8 @@
   font-weight: 700;
 }
 .games-primary {
-  background: var(--blue);
+  background: var(--blue-strong);
+  border-color: var(--blue-strong);
   color: #fff;
 }
 .games-secondary {

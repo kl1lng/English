@@ -110,6 +110,7 @@ export default function Achievements({
   completedCount = 0,
   wordsLearned = 0,
   wordsTotal = 0,
+  telegram = null,
 }) {
   if (gam.status === "loading")
     return <p className="ach-note" role="status">Loading your progress…</p>;
@@ -177,6 +178,45 @@ export default function Achievements({
           </p>
         </div>
       </div>
+
+      {telegram && telegram.status !== "off" && (
+        <div className="ach-panel ach-reminders">
+          <h2>Reminders in Telegram</h2>
+          {telegram.status === "linked" ? (
+            <>
+              <p className="ach-note">
+                Connected. You get one short message if you have not practised by evening.
+              </p>
+              <button className="ach-link" onClick={telegram.disconnect}>Disconnect</button>
+            </>
+          ) : telegram.status === "pending" ? (
+            <>
+              <p className="ach-note">
+                Press Start in the Telegram chat that opened, then check the connection here.
+              </p>
+              <button className="ach-link" onClick={telegram.refresh}>Check connection</button>
+              <button className="ach-link" onClick={telegram.connect}>Open Telegram again</button>
+            </>
+          ) : telegram.status === "error" ? (
+            <p className="ach-note" role="alert">
+              Reminders are not available right now. Please try again later.
+            </p>
+          ) : (
+            <>
+              <p className="ach-note">
+                Get a gentle reminder if you have not practised today. You can switch it off any time.
+              </p>
+              <button
+                className="ach-link"
+                onClick={telegram.connect}
+                disabled={telegram.status === "loading"}
+              >
+                Connect Telegram
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       <h2 className="ach-title">Your skills</h2>
       <ul className="ach-skills">

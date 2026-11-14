@@ -80,6 +80,7 @@ import { countsForStreak, levelFor, normalizeDaily } from "./lib/xp.js";
 import { newlyEarned } from "./lib/badges.js";
 import { useWordCards } from "./hooks/useWordCards.js";
 import { useGamification } from "./hooks/useGamification.js";
+import { useTelegramLink } from "./hooks/useTelegramLink.js";
 import Review, { ReviewDeckSummary } from "./components/Review.jsx";
 import Achievements, { ProgressCard } from "./components/Achievements.jsx";
 import Dialogue from "./components/Dialogue.jsx";
@@ -246,6 +247,7 @@ function App() {
     completedIndexes,
   });
   const gam = useGamification({ supabase, userId: session?.user?.id || null });
+  const telegram = useTelegramLink({ supabase, userId: session?.user?.id || null });
   const reviewsToday = normalizeDaily(gam.stats.extra.daily, localDateKey()).reviews;
   const deckWithXp = useMemo(
     () => ({
@@ -839,6 +841,7 @@ function App() {
             <Achievements
               gam={gam}
               completedCount={completedCount}
+              telegram={telegram}
               wordsLearned={deck.rows.filter((r) => r.state === 2).length}
               wordsTotal={deck.rows.length}
               streak={user.streak || 0}

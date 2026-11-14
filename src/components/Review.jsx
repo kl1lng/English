@@ -122,6 +122,11 @@ export default function Review({
   useEffect(() => {
     function onKey(e) {
       if (!queue || !entry || e.metaKey || e.ctrlKey || e.altKey) return;
+      // Do not steal keys while the learner is typing (for example in the helper chat).
+      const tag = e.target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || e.target?.isContentEditable) return;
+      // A focused button handles Space and Enter itself.
+      if ((e.key === " " || e.key === "Enter") && tag === "BUTTON") return;
       if (mode === "flip") {
         if (!revealed && (e.key === " " || e.key === "Enter")) {
           e.preventDefault();

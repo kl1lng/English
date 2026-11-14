@@ -15,7 +15,7 @@
   font-size: 15px;
 }
 .review-banner small {
-  color: var(--muted);
+  color: #5a6b80;
   font-size: 13px;
 }
 .review-banner > div {
@@ -48,7 +48,8 @@
 }
 .review-banner-btn,
 .review-primary {
-  background: var(--blue);
+  background: var(--blue-strong);
+  border-color: var(--blue-strong);
   color: #fff;
 }
 .review-secondary {
@@ -94,7 +95,7 @@
   font-size: 15px;
 }
 .review-meta {
-  color: var(--muted) !important;
+  color: #5a6b80 !important;
   font-size: 13px !important;
 }
 .review-warn {
@@ -120,7 +121,7 @@
 }
 .review-count {
   margin: 10px 0 18px;
-  color: var(--muted);
+  color: #5a6b80;
   font-size: 13px;
 }
 .review-word {
@@ -155,7 +156,7 @@
   background: var(--light-blue);
 }
 .review-answer dt {
-  color: var(--muted);
+  color: #5a6b80;
   font-size: 12px;
 }
 .review-answer dd {
@@ -198,7 +199,7 @@
   font-weight: 700;
 }
 .review-rate small {
-  color: var(--muted);
+  color: #5a6b80;
   font-weight: 500;
 }
 .review-rate-1 {

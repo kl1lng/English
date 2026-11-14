@@ -68,7 +68,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  color: var(--green);
+  color: #2f7f6a;
 }
 .ach-link {
   min-height: 44px;
@@ -144,8 +144,11 @@
   align-items: center;
   gap: 8px;
   margin: 0;
-  color: var(--orange);
+  color: var(--navy);
   font-size: 22px;
+}
+.ach-streak svg {
+  color: #c8602a;
 }
 .ach-streak b {
   color: var(--navy);
@@ -153,6 +156,12 @@
 }
 .ach-title {
   margin: 26px 0 12px !important;
+}
+.ach-reminders {
+  margin-top: 16px;
+}
+.ach-reminders .ach-link {
+  margin: 8px 8px 0 0;
 }
 .ach-skills {
   display: grid;

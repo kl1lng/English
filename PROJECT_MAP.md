@@ -35,6 +35,20 @@ Browser (React app, src/)
 - `.claude/launch.json` — preview configs: `web` (Vite, port 5173) and `api` (Express, port 3001).
 - `.env.example` — names of all environment variables. The real `.env` is git-ignored and must never be committed.
 
+## Engagement features (branch `feature/engagement`, not merged yet)
+
+Built on 2026-11-14 following `docs/superpowers/plans/2026-11-14-engagement-and-ai-speaking.md`. Restore point: git tag `restore-before-engagement` (the `main` commit before this work).
+
+- **Word review** (`src/components/Review.jsx`, `src/hooks/useWordCards.js`, `src/lib/srs.js`, `cloze.js`, `deck.js`): FSRS spaced repetition via `ts-fsrs`. Words of completed lessons (153 unique) enter the deck. Card types: flip, fill-the-blank, listening.
+- **XP, levels, badges, streak freezes, daily goal** (`src/lib/xp.js`, `badges.js`, `streak.js`, `src/hooks/useGamification.js`, `src/components/Achievements.jsx`). A day counts for the streak with a lesson or 10 word reviews.
+- **Speaking partner** (`api/dialogue.js`, `api/dialogue-summary.js`, `server/dialogue.js`, `src/data/scenarios.js`, `src/components/Dialogue.jsx`): voice role-play, 8 scenarios, reply read aloud by the browser voice, review at the end. Only the review is stored.
+- **Word games** (`src/components/Games.jsx`, `src/lib/games.js`): match pairs, build the sentence.
+- **Server checks**: `server/auth.js` (Supabase `getUser` on every AI call), `server/usage.js` (daily quotas in Supabase). `/api/feedback`, `/api/chat`, `/api/dialogue*` need sign-in.
+- **Telegram reminders** (`api/telegram.js`, `api/remind.js`, `server/telegram.js`, `vercel.json` cron): code and unit tests only. Never run against a real bot.
+- **Tests**: `npm test` (Vitest). Pure logic and API helpers only; the UI was checked by hand.
+
+SQL migrations to run once, in order, in the Supabase SQL Editor (nothing has been run yet): `supabase/migrations/001_foundation.sql` … `005_telegram.sql`. Until a migration is run, the matching screen shows "not set up yet" and everything else keeps working.
+
 ## Environment variables
 
 Names only; never write values into the repository.
@@ -48,6 +62,8 @@ Names only; never write values into the repository.
 | `GROQ_FEEDBACK_MODEL`, `CLOUDFLARE_FEEDBACK_MODEL`, `PORT` | Optional overrides | `.env` |
 
 `/api/health` returns `speechFeedback` (true when both Cloudflare variables are set) and `ai` (true only when `OPENAI_API_KEY` is set). The app turns feedback on when `speechFeedback` is true, so `ai: false` on the live site is expected.
+
+New variables for the engagement features (names only): `DAILY_FEEDBACK_LIMIT`, `DAILY_CHAT_LIMIT`, `DAILY_DIALOGUE_SESSIONS`, `DAILY_DIALOGUE_TURNS`, `DAILY_DIALOGUE_SUMMARIES` (optional limits), `AI_DIALOGUE_ENABLED` (set to `false` to switch the speaking partner off), and for reminders `VITE_TELEGRAM_BOT_USERNAME`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `CRON_SECRET`, `SUPABASE_SERVICE_ROLE_KEY` (server-only, never expose).
 
 ## Deployment
 
@@ -74,7 +90,11 @@ Names only; never write values into the repository.
 
 ## Known gaps and things to check
 
-- `README.md` and `docs/superpowers/` still describe the old school pilot (grades 7–10, teacher cabinet). They are outdated.
+- `README.md` and `docs/superpowers/` still describe the old school pilot (grades 7–10, teacher cabinet). They are outdated. School wording also remains in the AI prompts (`server/cloudflare-ai.js`, `api/chat.js`) and a few UI strings by the owner's request; the cleanup (plan task 0.6) is not done.
+- The engagement features have not been tested with a live Supabase project, real AI keys or a real Telegram bot. The speaking partner was only checked through unit tests and the screens; no real recording was sent.
+- `vercel.json` adds a daily cron (`/api/remind`, 13:00 UTC). Check that the Vercel plan allows it before merging.
+- Custom phrases from the speaking-partner review are not added to the word deck (word cards only support lesson words).
+- Streak counts are computed on the client; XP and badges can be edited by the learner. A shared leaderboard would need server-side awarding.
 - Legacy Express auth and submissions code can be removed.
 - Words in the Drive folder "Озвучка 2" that are not in any lesson never appear in the app (for example `crystal-clear`, `symbolise`).
 - Kazakh (`kk`) translations in `src/lessons.js` have not been reviewed by a native speaker.
