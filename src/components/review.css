@@ -140,6 +140,10 @@
   background: var(--light-blue);
   color: var(--blue);
 }
+.review-speak-big {
+  width: 64px;
+  height: 64px;
+}
 .review-answer {
   display: grid;
   gap: 10px;

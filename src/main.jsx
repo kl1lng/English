@@ -49,6 +49,7 @@ import {
   Users,
   Route,
   Leaf,
+  Puzzle,
   Volume2,
   Waves,
   X,
@@ -82,6 +83,7 @@ import { useGamification } from "./hooks/useGamification.js";
 import Review, { ReviewDeckSummary } from "./components/Review.jsx";
 import Achievements, { ProgressCard } from "./components/Achievements.jsx";
 import Dialogue from "./components/Dialogue.jsx";
+import Games from "./components/Games.jsx";
 
 const API = "/api";
 const cx = (...values) => values.filter(Boolean).join(" ");
@@ -250,7 +252,7 @@ function App() {
       ...deck,
       submitReview: (key, rating, mode) => {
         deck.submitReview(key, rating, mode);
-        gam.award({ type: "review", rating });
+        gam.award({ type: "review", rating, mode });
       },
     }),
     [deck, gam.award],
@@ -667,6 +669,13 @@ function App() {
             <span>Word review</span>
           </button>
           <button
+            onClick={() => navigate("games")}
+            className={cx("nav-link", page === "games" && "active")}
+          >
+            <Puzzle size={18} />
+            <span>Word games</span>
+          </button>
+          <button
             onClick={() => navigate("dialogue")}
             className={cx("nav-link", page === "dialogue" && "active")}
           >
@@ -754,11 +763,13 @@ function App() {
                   ? "30-day journey"
                   : page === "review"
                     ? "Word review"
-                    : page === "dialogue"
-                      ? "Speaking partner"
-                      : page === "achievements"
-                        ? "Level and badges"
-                        : "My certificate"}
+                    : page === "games"
+                      ? "Word games"
+                      : page === "dialogue"
+                        ? "Speaking partner"
+                        : page === "achievements"
+                          ? "Level and badges"
+                          : "My certificate"}
             </b>
           </div>
           <div className="topbar-right">
@@ -812,6 +823,12 @@ function App() {
               deck={deckWithXp}
             />
           )}
+          {page === "games" && (
+            <Games
+              {...{ completedIndexes, speakWord, navigate }}
+              award={gam.award}
+            />
+          )}
           {page === "dialogue" && (
             <Dialogue
               {...{ token, aiAvailable, completedCount, navigate }}
@@ -821,6 +838,9 @@ function App() {
           {page === "achievements" && (
             <Achievements
               gam={gam}
+              completedCount={completedCount}
+              wordsLearned={deck.rows.filter((r) => r.state === 2).length}
+              wordsTotal={deck.rows.length}
               streak={user.streak || 0}
               reviewsToday={reviewsToday}
               lessonDone={(user.submissions || []).some(

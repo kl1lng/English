@@ -80,7 +80,37 @@ export function ProgressCard({ gam, lessonDone, reviewsToday, navigate }) {
   );
 }
 
-export default function Achievements({ gam, streak, lessonDone, reviewsToday }) {
+function Skill({ label, value, note }) {
+  const pct = value == null ? 0 : Math.round(value * 100);
+  return (
+    <li className="ach-skill">
+      <div>
+        <b>{label}</b>
+        <small>{note}</small>
+      </div>
+      <div
+        className="ach-bar"
+        role="progressbar"
+        aria-label={label}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={pct}
+      >
+        <span style={{ width: `${pct}%` }} />
+      </div>
+    </li>
+  );
+}
+
+export default function Achievements({
+  gam,
+  streak,
+  lessonDone,
+  reviewsToday,
+  completedCount = 0,
+  wordsLearned = 0,
+  wordsTotal = 0,
+}) {
   if (gam.status === "loading")
     return <p className="ach-note" role="status">Loading your progress…</p>;
   if (gam.status === "unavailable")
@@ -147,6 +177,33 @@ export default function Achievements({ gam, streak, lessonDone, reviewsToday }) 
           </p>
         </div>
       </div>
+
+      <h2 className="ach-title">Your skills</h2>
+      <ul className="ach-skills">
+        <Skill
+          label="Vocabulary"
+          value={wordsTotal ? wordsLearned / wordsTotal : 0}
+          note={`${wordsLearned} of ${wordsTotal} words remembered`}
+        />
+        <Skill
+          label="Speaking"
+          value={completedCount / 30}
+          note={`${completedCount} of 30 lessons, ${stats.extra.dialoguesTotal || 0} conversations`}
+        />
+        <Skill
+          label="Listening"
+          value={
+            (stats.extra.listenTotal || 0) >= 5
+              ? stats.extra.listenCorrect / stats.extra.listenTotal
+              : null
+          }
+          note={
+            (stats.extra.listenTotal || 0) >= 5
+              ? `${Math.round((stats.extra.listenCorrect / stats.extra.listenTotal) * 100)}% right in listening cards`
+              : "Do a few listening cards in Word review"
+          }
+        />
+      </ul>
 
       <h2 className="ach-title">Badges</h2>
       <ul className="ach-badges">

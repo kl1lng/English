@@ -14,8 +14,10 @@ const ratingButtons = [
 ];
 
 function cardMode(position, entry) {
-  // Mix the two exercises; fall back to flip when the example has no usable blank.
-  if (position % 2 === 1 && entry && makeCloze(entry.example, entry.term)) return "cloze";
+  // Rotate flip, fill-the-blank and listening; fall back to flip when a blank is not possible.
+  const slot = position % 3;
+  if (slot === 1 && entry && makeCloze(entry.example, entry.term)) return "cloze";
+  if (slot === 2 && entry) return "listen";
   return "flip";
 }
 
@@ -82,13 +84,18 @@ export default function Review({
     [mode, entry],
   );
   const choices = useMemo(() => {
-    if (!cloze || !entry) return [];
+    if ((!cloze && mode !== "listen") || !entry) return [];
     const pool = [...wordIndex.values()]
       .filter((w) => w.lessonIndex === entry.lessonIndex)
       .map((w) => w.term);
     const extra = [...wordIndex.values()].map((w) => w.term);
     return buildChoices(entry.term, [...pool, ...extra]);
-  }, [cloze, entry]);
+  }, [cloze, entry, mode]);
+
+  // Listening cards play the word as soon as they appear.
+  useEffect(() => {
+    if (mode === "listen" && entry) speakWord(entry.term);
+  }, [mode, key, position]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function rate(rating) {
     if (!key) return;
@@ -277,10 +284,27 @@ export default function Review({
         </>
       )}
 
-      {mode === "cloze" && cloze && (
+      {(mode === "cloze" || mode === "listen") && (
         <>
-          <p className="review-ask">Choose the word that fits.</p>
-          <p className="review-sentence">{cloze.text}</p>
+          {mode === "cloze" ? (
+            <>
+              <p className="review-ask">Choose the word that fits.</p>
+              <p className="review-sentence">{cloze.text}</p>
+            </>
+          ) : (
+            <>
+              <p className="review-ask">Listen and choose the word you hear.</p>
+              <div className="review-word">
+                <button
+                  className="review-speak review-speak-big"
+                  onClick={() => speakWord(entry.term)}
+                  aria-label="Play the word again"
+                >
+                  <Volume2 size={26} aria-hidden="true" />
+                </button>
+              </div>
+            </>
+          )}
           <div className="review-choices" role="group" aria-label="Answers">
             {choices.map((option) => {
               const isAnswer = option.toLowerCase() === entry.term.toLowerCase();

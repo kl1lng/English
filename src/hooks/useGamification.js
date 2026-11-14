@@ -122,6 +122,12 @@ export function useGamification({ supabase, userId }) {
           daily,
           reviewsTotal: s.extra.reviewsTotal + (event.type === "review" ? 1 : 0),
           dialoguesTotal: (s.extra.dialoguesTotal || 0) + (event.type === "dialogue" ? 1 : 0),
+          listenTotal:
+            (s.extra.listenTotal || 0) + (event.type === "review" && event.mode === "listen" ? 1 : 0),
+          listenCorrect:
+            (s.extra.listenCorrect || 0) +
+            (event.type === "review" && event.mode === "listen" && event.rating >= 3 ? 1 : 0),
+          gamesTotal: (s.extra.gamesTotal || 0) + (event.type === "game" ? 1 : 0),
         },
       };
     });

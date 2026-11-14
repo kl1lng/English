@@ -62,6 +62,16 @@ describe("xp awards", () => {
   it("gives xp for a finished conversation", () => {
     expect(awardFor({ type: "dialogue" }, null, today).xp).toBe(20);
   });
+  it("caps game xp per day", () => {
+    let daily = null;
+    let total = 0;
+    for (let i = 0; i < 10; i++) {
+      const r = awardFor({ type: "game" }, daily, today);
+      daily = r.daily;
+      total += r.xp;
+    }
+    expect(total).toBe(30);
+  });
   it("scales the streak bonus up to 7 days", () => {
     expect(awardFor({ type: "streak_day", streak: 3 }, null, today).xp).toBe(15);
     expect(awardFor({ type: "streak_day", streak: 30 }, null, today).xp).toBe(35);
