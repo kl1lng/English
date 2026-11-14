@@ -1,5 +1,5 @@
 -- Phase 2.7: Telegram reminders. A learner links a Telegram chat with a one-time token.
--- Run once in Supabase → SQL Editor, after 004_dialogue.sql. Safe to run twice.
+-- Already applied to the discover-kazakhstan project on 2026-11-14. Policies are not re-runnable.
 --
 -- The learner cannot write chat_id themselves (otherwise anyone could make the bot message
 -- an arbitrary chat). Linking happens only in the server webhook, which uses the service key.

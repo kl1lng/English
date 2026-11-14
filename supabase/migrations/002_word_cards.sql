@@ -1,5 +1,5 @@
 -- Phase 1: spaced-repetition deck (one card per learner and word) and a review history.
--- Run once in Supabase → SQL Editor, after 001_foundation.sql. Safe to run twice.
+-- Already applied to the discover-kazakhstan project on 2026-11-14. Policies are not re-runnable.
 
 create table if not exists public.word_cards (
   user_id uuid not null references auth.users (id) on delete cascade,

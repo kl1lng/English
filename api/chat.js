@@ -59,7 +59,7 @@ export default async function handler(request, response) {
         {
           role: "system",
           content:
-            "You are a friendly English tutor for Kazakhstani school students aged 12-16. Help translate Kazakh or Russian into natural, simple English, explain vocabulary simply, or improve sentences. Be concise and encouraging." +
+            "You are a friendly English tutor for adult learners in Kazakhstan (level B1-B2). Help translate Kazakh or Russian into natural, simple English, explain vocabulary simply, or improve sentences. Be concise and encouraging." +
             lessonContext,
         },
         { role: "user", content: message },

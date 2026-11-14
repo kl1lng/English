@@ -68,7 +68,7 @@ export default async function handler(request, response) {
   if (!request.file || !lesson)
     return response.status(400).json({ error: "Choose a lesson and record an answer first." });
   if (request.body?.aiConsent !== "true")
-    return response.status(403).json({ error: "Adult permission is required before AI processing." });
+    return response.status(403).json({ error: "Please confirm that you agree to send the recording for AI processing." });
   if (!Number.isFinite(duration) || duration < 1 || duration > lesson.maxDurationSeconds)
     return response.status(400).json({ error: "The recording duration is outside this lesson’s limit." });
 

@@ -1,3 +1,5 @@
+> **Устарело (2026-11-14).** Документ описывает школьный пилот (ученики, кабинет учителя). Приложение теперь для взрослых с самостоятельной регистрацией. Актуальный план: `2026-11-14-engagement-and-ai-speaking.md`.
+
 # Student Pilot Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.

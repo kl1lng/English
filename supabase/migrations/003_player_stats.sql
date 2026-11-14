@@ -1,5 +1,5 @@
 -- Phase 2: experience points, badges, streak freezes and the daily goal.
--- Run once in Supabase → SQL Editor, after 002_word_cards.sql. Safe to run twice.
+-- Already applied to the discover-kazakhstan project on 2026-11-14. Policies are not re-runnable.
 
 create table if not exists public.player_stats (
   user_id uuid primary key references auth.users (id) on delete cascade,

@@ -1,6 +1,6 @@
 -- Phase 3: finished speaking-partner conversations. Only the review is stored
 -- (strengths, corrections, phrases). The conversation text and the audio are NOT stored.
--- Run once in Supabase → SQL Editor, after 003_player_stats.sql. Safe to run twice.
+-- Already applied to the discover-kazakhstan project on 2026-11-14. Policies are not re-runnable.
 
 create table if not exists public.dialogue_sessions (
   id uuid primary key default gen_random_uuid(),

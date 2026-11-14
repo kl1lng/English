@@ -1,3 +1,5 @@
+> **Устарело (2026-11-14).** Документ описывает школьный пилот (ученики, кабинет учителя). Приложение теперь для взрослых с самостоятельной регистрацией. Актуальный план: `../plans/2026-11-14-engagement-and-ai-speaking.md`.
+
 # Student Pilot: Teacher-Created Accounts and Persistent Progress
 
 ## Intent

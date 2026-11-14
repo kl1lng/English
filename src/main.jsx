@@ -120,8 +120,7 @@ const formatTime = (s) =>
 const localDateKey = (date = new Date()) => dayKey(date);
 const fallbackUser = {
   name: "Antoshka",
-  grade: "8",
-  school: "Demo profile",
+  demo: true,
   completed: 6,
   streak: 4,
   bestStreak: 4,
@@ -180,7 +179,7 @@ function App() {
           )
           .map((s) => Number(s.lessonIndex)),
         ...(user.completed &&
-        (!user.submissions?.length || user.school === "Demo profile")
+        (!user.submissions?.length || user.demo)
           ? Array.from({ length: user.completed }, (_, i) => i)
           : []),
       ]),
@@ -1367,7 +1366,7 @@ function Dashboard({
           <span>
             <b>Make this journey yours</b>
             <small>
-              Create a free student account to save lessons, streaks, and
+              Create a free account to save your lessons, streaks, and
               feedback.
             </small>
           </span>
@@ -2205,7 +2204,7 @@ function LessonModal({
                         onChange={(e) => setAiConsent(e.target.checked)}
                       />
                       <span>
-                        With a parent or teacher’s permission, send this clip to
+                        I agree to send this clip to
                         the connected AI service for transcription and feedback.
                         The audio is deleted after processing. Signed-in attempts
                         may retain the transcript for up to 90 days; demo
