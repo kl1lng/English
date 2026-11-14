@@ -81,6 +81,7 @@ import { useWordCards } from "./hooks/useWordCards.js";
 import { useGamification } from "./hooks/useGamification.js";
 import Review, { ReviewDeckSummary } from "./components/Review.jsx";
 import Achievements, { ProgressCard } from "./components/Achievements.jsx";
+import Dialogue from "./components/Dialogue.jsx";
 
 const API = "/api";
 const cx = (...values) => values.filter(Boolean).join(" ");
@@ -318,12 +319,13 @@ function App() {
       bestStreak: user.bestStreak || 0,
       wordsLearned: deck.rows.filter((r) => r.state === 2).length,
       reviewsTotal: gam.stats.extra.reviewsTotal,
+      dialoguesTotal: gam.stats.extra.dialoguesTotal || 0,
       level: levelFor(gam.stats.xp).level,
     });
     if (!fresh.length) return;
     gam.unlockBadges(fresh.map((b) => b.id));
     setToast(`Badge unlocked: ${fresh[0].title}`);
-  }, [gam.status, gam.stats.xp, gam.stats.extra.reviewsTotal, user.streak, user.completed, completed, deck.rows]);
+  }, [gam.status, gam.stats.xp, gam.stats.extra.reviewsTotal, gam.stats.extra.dialoguesTotal, user.streak, user.completed, completed, deck.rows]);
 
   useEffect(() => {
     fetch(`${API}/health`)
@@ -560,7 +562,7 @@ function App() {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ message, lessonIndex: selected }),
       });
       const d = await r.json();
       setChatMessages((old) => [
@@ -581,6 +583,22 @@ function App() {
         { role: "assistant", text: answer },
       ]);
     }
+  }
+  // A finished conversation earns XP; only the review (never the text) is stored.
+  function saveDialogue({ scenarioId, turns, summary }) {
+    gam.award({ type: "dialogue" });
+    if (!supabase || !session) return;
+    supabase
+      .from("dialogue_sessions")
+      .insert({
+        user_id: session.user.id,
+        scenario_id: scenarioId,
+        turns,
+        summary,
+      })
+      .then(({ error }) => {
+        if (error) setToast("Your conversation review could not be saved.");
+      });
   }
   function navigate(next) {
     setPage(next);
@@ -647,6 +665,13 @@ function App() {
           >
             <Layers size={18} />
             <span>Word review</span>
+          </button>
+          <button
+            onClick={() => navigate("dialogue")}
+            className={cx("nav-link", page === "dialogue" && "active")}
+          >
+            <MessageCircle size={18} />
+            <span>Speaking partner</span>
           </button>
           <button
             onClick={() => navigate("achievements")}
@@ -729,9 +754,11 @@ function App() {
                   ? "30-day journey"
                   : page === "review"
                     ? "Word review"
-                    : page === "achievements"
-                      ? "Level and badges"
-                      : "My certificate"}
+                    : page === "dialogue"
+                      ? "Speaking partner"
+                      : page === "achievements"
+                        ? "Level and badges"
+                        : "My certificate"}
             </b>
           </div>
           <div className="topbar-right">
@@ -783,6 +810,12 @@ function App() {
             <Review
               {...{ speakWord, navigate, completedCount }}
               deck={deckWithXp}
+            />
+          )}
+          {page === "dialogue" && (
+            <Dialogue
+              {...{ token, aiAvailable, completedCount, navigate }}
+              onFinished={saveDialogue}
             />
           )}
           {page === "achievements" && (

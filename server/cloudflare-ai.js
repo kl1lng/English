@@ -18,7 +18,7 @@ const defaultGroqModel = "openai/gpt-oss-120b";
 
 // Text feedback: Groq when GROQ_API_KEY is set (free tier), else Cloudflare Workers AI.
 // Whisper transcription always stays on Cloudflare.
-async function requestFeedbackText(messages) {
+export async function requestFeedbackText(messages, { maxTokens } = {}) {
   const groqKey = process.env.GROQ_API_KEY;
   if (groqKey) {
     const response = await fetch(groqUrl, {
@@ -32,7 +32,7 @@ async function requestFeedbackText(messages) {
         messages,
         response_format: { type: "json_object" },
         // gpt-oss spends part of the budget on reasoning, so leave room for the JSON.
-        max_tokens: 1500,
+        max_tokens: maxTokens || 1500,
         temperature: 0.2,
       }),
     });
@@ -45,10 +45,23 @@ async function requestFeedbackText(messages) {
   const result = await runModel(model, {
     messages,
     response_format: { type: "json_object" },
-    max_tokens: 420,
+    max_tokens: maxTokens ? Math.min(maxTokens, 700) : 420,
     temperature: 0.2,
   });
   return result?.response;
+}
+
+// Speech to text (English). Throws when nothing was recognised.
+export async function transcribeAudio(audio) {
+  const result = await runModel("@cf/openai/whisper-large-v3-turbo", {
+    audio: audio.toString("base64"),
+    task: "transcribe",
+    language: "en",
+    vad_filter: true,
+  });
+  const text = String(result?.text || "").trim().slice(0, 10000);
+  if (!text) throw new Error("Cloudflare Whisper returned no transcript.");
+  return text;
 }
 
 async function runModel(model, body) {

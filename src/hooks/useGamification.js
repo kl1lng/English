@@ -121,6 +121,7 @@ export function useGamification({ supabase, userId }) {
           ...s.extra,
           daily,
           reviewsTotal: s.extra.reviewsTotal + (event.type === "review" ? 1 : 0),
+          dialoguesTotal: (s.extra.dialoguesTotal || 0) + (event.type === "dialogue" ? 1 : 0),
         },
       };
     });

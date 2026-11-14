@@ -8,6 +8,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { lessons } from "../src/lessons.js";
 import { createCloudflareSpeakingFeedback } from "./cloudflare-ai.js";
+import dialogueHandler from "../api/dialogue.js";
+import dialogueSummaryHandler from "../api/dialogue-summary.js";
 import {
   createNoTranscriptFeedback,
   createTranscriptFeedback,
@@ -591,6 +593,9 @@ app.post(
     res.json({ answer });
   },
 );
+// The speaking partner uses the same handlers as the Vercel functions.
+app.post("/api/dialogue", dialogueHandler);
+app.post("/api/dialogue-summary", dialogueSummaryHandler);
 const distDir = path.resolve(here, "../dist");
 if (fs.existsSync(distDir)) {
   app.use(express.static(distDir));

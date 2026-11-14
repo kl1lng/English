@@ -1,0 +1,249 @@
+/* Speaking partner. Colours come from the :root tokens in styles.css. */
+.dlg-page,
+.dlg-card {
+  max-width: 720px;
+  margin: 0 auto;
+  color: var(--navy);
+}
+.dlg-card {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 28px 24px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  text-align: center;
+}
+.dlg-page h1,
+.dlg-card h1 {
+  margin: 0 0 6px;
+  font-size: 30px;
+}
+.dlg-note {
+  margin: 0 0 16px;
+  color: #5a6b80;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.dlg-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dlg-scenario {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 64px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--navy);
+  text-align: left;
+}
+.dlg-scenario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.dlg-scenario b {
+  display: block;
+  font-size: 16px;
+}
+.dlg-scenario small {
+  display: block;
+  color: #5a6b80;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.dlg-scenario-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--light-blue);
+  color: var(--blue);
+}
+.dlg-level {
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--line);
+  color: #5a6b80;
+  font-size: 12px;
+  font-weight: 700;
+}
+.dlg-back,
+.dlg-secondary {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 700;
+}
+.dlg-back {
+  margin-bottom: 10px;
+}
+.dlg-log {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  max-height: 46vh;
+  min-height: 160px;
+  overflow-y: auto;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+.dlg-msg {
+  position: relative;
+  max-width: 86%;
+  padding: 10px 14px;
+  border-radius: 14px;
+}
+.dlg-msg p {
+  margin: 2px 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+}
+.dlg-who {
+  color: #5a6b80;
+  font-size: 12px;
+  font-weight: 700;
+}
+.dlg-ai {
+  justify-self: start;
+  background: var(--light-blue);
+}
+.dlg-user {
+  justify-self: end;
+  background: var(--navy);
+  color: #fff;
+}
+.dlg-user .dlg-who {
+  color: #d3dcea;
+}
+.dlg-listen {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-top: 4px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--blue);
+}
+.dlg-status {
+  margin: 0;
+  color: #5a6b80;
+  font-size: 14px;
+}
+.dlg-error {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fff3ea;
+  color: #7a3a0c;
+  font-size: 14px;
+}
+.dlg-controls {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+.dlg-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: #44556a;
+  font-size: 14px;
+}
+.dlg-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.dlg-consent input {
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  accent-color: var(--blue);
+}
+.dlg-rec {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+.dlg-rec:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.dlg-rec.on {
+  background: var(--orange);
+  color: var(--navy);
+}
+.dlg-count {
+  margin: 0;
+  color: #5a6b80;
+  font-size: 13px;
+  text-align: center;
+}
+.dlg-summary {
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+.dlg-summary h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+.dlg-summary h3 {
+  margin: 14px 0 4px;
+  font-size: 15px;
+}
+.dlg-summary ul {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+.dlg-summary del {
+  color: #9a4b12;
+}
+.dlg-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+@media (max-width: 480px) {
+  .dlg-page h1 {
+    font-size: 24px;
+  }
+  .dlg-msg {
+    max-width: 94%;
+  }
+}

@@ -5,6 +5,7 @@ const BEYOND_STEP = 1000;
 export const XP = {
   lessonFirst: 50,
   lessonRetry: 10,
+  dialogue: 20,
   reviewDailyCap: 100,
   streakDay: 5,
   streakDayMaxMultiplier: 7,
@@ -61,6 +62,9 @@ export function awardFor(event, dailyState, today) {
       daily.reviews += 1;
       break;
     }
+    case "dialogue":
+      xp = XP.dialogue;
+      break;
     case "streak_day":
       xp = XP.streakDay * Math.min(Math.max(1, event.streak || 1), XP.streakDayMaxMultiplier);
       break;

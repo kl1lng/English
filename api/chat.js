@@ -1,3 +1,4 @@
+import { lessons } from "../src/lessons.js";
 import { getRequestUser } from "../server/auth.js";
 import { consume, dailyLimit } from "../server/usage.js";
 
@@ -43,6 +44,12 @@ export default async function handler(request, response) {
   if (!apiKey) return response.status(200).json({ answer: demoAnswer(message) });
 
   try {
+    const lesson = lessons[Number(request.body?.lessonIndex)];
+    const lessonContext = lesson
+      ? ` The learner is currently studying the lesson "${lesson.title}" with these target words: ${lesson.words
+          .map((w) => w.term)
+          .join(", ")}. Prefer examples about this topic when it fits.`
+      : "";
     const OpenAI = (await import("openai")).default;
     const client = new OpenAI({ apiKey });
     const completion = await client.chat.completions.create({
@@ -52,7 +59,8 @@ export default async function handler(request, response) {
         {
           role: "system",
           content:
-            "You are a friendly English tutor for Kazakhstani school students aged 12-16. Help translate Kazakh or Russian into natural, simple English, explain vocabulary simply, or improve sentences. Be concise and encouraging.",
+            "You are a friendly English tutor for Kazakhstani school students aged 12-16. Help translate Kazakh or Russian into natural, simple English, explain vocabulary simply, or improve sentences. Be concise and encouraging." +
+            lessonContext,
         },
         { role: "user", content: message },
       ],

@@ -59,6 +59,9 @@ describe("xp awards", () => {
     expect(awardFor({ type: "review", rating: 3 }, r1.daily, today).xp).toBe(0);
     expect(normalizeDaily(r1.daily, "2026-11-15").reviewXp).toBe(0);
   });
+  it("gives xp for a finished conversation", () => {
+    expect(awardFor({ type: "dialogue" }, null, today).xp).toBe(20);
+  });
   it("scales the streak bonus up to 7 days", () => {
     expect(awardFor({ type: "streak_day", streak: 3 }, null, today).xp).toBe(15);
     expect(awardFor({ type: "streak_day", streak: 30 }, null, today).xp).toBe(35);
