@@ -1,3 +1,6 @@
+import { getRequestUser } from "../server/auth.js";
+import { consume, dailyLimit } from "../server/usage.js";
+
 const translations = {
   "Бұл жер өте әдемі": "This place is very beautiful.",
   "Бұл жер өте әдемі.": "This place is very beautiful.",
@@ -21,6 +24,14 @@ export default async function handler(request, response) {
     response.setHeader("Allow", "POST");
     return response.status(405).json({ error: "Use POST to send a message." });
   }
+
+  const user = await getRequestUser(request);
+  if (!user)
+    return response.status(401).json({ error: "Please sign in first." });
+  if (user.userId && !(await consume(user.token, "chat", dailyLimit("DAILY_CHAT_LIMIT", 60))))
+    return response
+      .status(429)
+      .json({ error: "You have reached today’s limit for the helper. Please try again tomorrow." });
 
   const message = String(request.body?.message || "")
     .trim()

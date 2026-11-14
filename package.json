@@ -8,7 +8,8 @@
     "server": "node server/index.js",
     "build": "vite build",
     "start": "node server/index.js",
-    "dev:web": "vite"
+    "dev:web": "vite",
+    "test": "vitest run"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "concurrently": "^10.0.5",
-    "prettier": "^3.9.9"
+    "prettier": "^3.9.9",
+    "vitest": "^5.1.0"
   }
 }

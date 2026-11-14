@@ -1,6 +1,8 @@
 import multer from "multer";
 import { lessons } from "../src/lessons.js";
 import { createCloudflareSpeakingFeedback } from "../server/cloudflare-ai.js";
+import { getRequestUser } from "../server/auth.js";
+import { consume, dailyLimit } from "../server/usage.js";
 
 export const config = { api: { bodyParser: false } };
 
@@ -26,6 +28,9 @@ export default async function handler(request, response) {
     response.setHeader("Allow", "POST");
     return response.status(405).json({ error: "Use POST to send a recording." });
   }
+  const user = await getRequestUser(request);
+  if (!user)
+    return response.status(401).json({ error: "Please sign in first." });
   if (!process.env.CLOUDFLARE_ACCOUNT_ID || !process.env.CLOUDFLARE_API_TOKEN)
     return response
       .status(503)
@@ -40,6 +45,11 @@ export default async function handler(request, response) {
     return response.status(429).json({ error: "Please wait before sending another recording." });
   recent.push(now);
   requestsByIp.set(ip, recent);
+
+  if (user.userId && !(await consume(user.token, "feedback", dailyLimit("DAILY_FEEDBACK_LIMIT", 30))))
+    return response
+      .status(429)
+      .json({ error: "You have reached today’s limit for speech feedback. Please try again tomorrow." });
 
   try {
     await receiveAudio(request, response);

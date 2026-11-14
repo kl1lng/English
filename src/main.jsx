@@ -72,6 +72,8 @@ function speakWord(term) {
 import "./styles.css";
 
 import { supabase, supabaseReady } from "./supabase.js";
+import { dayKey } from "./lib/time.js";
+import { advanceStreak } from "./lib/streak.js";
 
 const API = "/api";
 const cx = (...values) => values.filter(Boolean).join(" ");
@@ -104,16 +106,7 @@ function PlaceIcon({ name, size = 18, ...props }) {
 }
 const formatTime = (s) =>
   `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-const localDateKey = (date = new Date()) => {
-  const parts = new Intl.DateTimeFormat("en", {
-    timeZone: "Asia/Oral",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(date);
-  const p = Object.fromEntries(parts.map((x) => [x.type, x.value]));
-  return `${p.year}-${p.month}-${p.day}`;
-};
+const localDateKey = (date = new Date()) => dayKey(date);
 const fallbackUser = {
   name: "Antoshka",
   grade: "8",
@@ -344,7 +337,6 @@ function App() {
     };
     setUser((old) => {
       const currentDay = localDateKey();
-      const previousDay = localDateKey(new Date(Date.now() - 86400000));
       const previousSubmissions = old.submissions || [];
       const firstSubmissionToday = !previousSubmissions.some(
         (submission) => submission.day === currentDay,
@@ -352,9 +344,11 @@ function App() {
       const days = [...new Set([...(old.days || []), currentDay])];
       const nextStreak = !firstSubmissionToday
         ? old.streak || 0
-        : (old.days || []).includes(previousDay)
-          ? (old.streak || 0) + 1
-          : 1;
+        : advanceStreak({
+            streak: old.streak || 0,
+            days: old.days || [],
+            today: currentDay,
+          });
       const firstSubmissionForCard =
         !previousSubmissions.some(
           (submission) =>
@@ -416,7 +410,11 @@ function App() {
     body.append("duration", seconds);
     body.append("aiConsent", String(aiConsent));
     try {
-      const res = await fetch(`${API}/feedback`, { method: "POST", body });
+      const res = await fetch(`${API}/feedback`, {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body,
+      });
       const data = await res.json();
       if (!res.ok) {
         setToast(data.error || "Your answer could not be processed.");
