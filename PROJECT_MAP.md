@@ -56,6 +56,22 @@ Names only; never write values into the repository.
 - Supabase: project `discover-kazakhstan` (organisation `kl1lng's Org`). Auth email confirmation is off. Site URL should be `https://30english.vercel.app`.
 - The Supabase free plan allows two active projects. The organisation also holds `DosYm` and `Psychology`, so one of them must stay paused. While `discover-kazakhstan` is paused, sign-in and saving do not work.
 
+## Continuing in a new chat
+
+- Local folder: `C:\Users\kulda\Documents\Antoshka`. Start the chat in this folder so this file and the code are visible.
+- Links:
+  - Vercel project: https://vercel.com/genius-84b0/30english
+  - Vercel environment variables: https://vercel.com/genius-84b0/30english/settings/environment-variables
+  - Vercel deployments: https://vercel.com/genius-84b0/30english/deployments
+  - Supabase project `discover-kazakhstan`: https://supabase.com/dashboard/project/ixdaiwifxlvtfzezdupq
+  - Supabase organisation (all projects, pause/resume): https://supabase.com/dashboard/org/qtpwasmmeucidxuijiwg
+  - GitHub: https://github.com/kl1lng/English
+- Pushing: the default SSH key is rejected by GitHub for this repository. A push works with the project's deploy key, passed for that one command only (no git config change):
+  `GIT_SSH_COMMAND="ssh -i ~/.ssh/english_github_deploy -o IdentitiesOnly=yes" git push origin main`
+- Unpushed work: run `git status` and `git log origin/main..HEAD` to see commits that exist only locally. This map was last committed locally before it was pushed.
+- Rules from the owner's settings: do not push, deploy or delete data unless asked. Never print values from `.env` or Vercel secrets. Do not type API keys or tokens into web forms; the owner pastes those. Check changes in the built-in browser before saying they are done.
+- Windows: git prints LF/CRLF warnings; they can be ignored.
+
 ## Known gaps and things to check
 
 - `README.md` and `docs/superpowers/` still describe the old school pilot (grades 7–10, teacher cabinet). They are outdated.
