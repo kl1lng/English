@@ -1,0 +1,224 @@
+/* Level, goals and badges. Colours come from the :root tokens in styles.css. */
+.ach-card {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr auto;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+.ach-level {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.ach-level-badge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+}
+.ach-level-big {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  font-size: 30px;
+}
+.ach-level-text {
+  flex: 1;
+  min-width: 0;
+}
+.ach-level-text b,
+.ach-goal b {
+  display: block;
+  color: var(--navy);
+  font-size: 15px;
+}
+.ach-level-text small,
+.ach-goal small {
+  display: block;
+  color: #5a6b80;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.ach-bar {
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 8px;
+  background: var(--light-blue);
+  overflow: hidden;
+}
+.ach-bar span {
+  display: block;
+  height: 100%;
+  background: var(--blue);
+  transition: width 0.3s ease;
+}
+.ach-goal {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--green);
+}
+.ach-link {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 700;
+}
+.ach-page {
+  max-width: 860px;
+  margin: 0 auto;
+  color: var(--navy);
+}
+.ach-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.ach-page h1 {
+  margin: 0;
+  font-size: 32px;
+}
+.ach-page h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+.ach-note {
+  margin: 6px 0 0;
+  color: #5a6b80;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.ach-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.ach-panel {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+.ach-options {
+  display: grid;
+  gap: 8px;
+}
+.ach-option {
+  display: grid;
+  gap: 2px;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--navy);
+  text-align: left;
+}
+.ach-option small {
+  color: #5a6b80;
+  font-size: 13px;
+}
+.ach-option.on {
+  border-color: var(--blue);
+  background: var(--light-blue);
+}
+.ach-streak {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--orange);
+  font-size: 22px;
+}
+.ach-streak b {
+  color: var(--navy);
+  font-size: 32px;
+}
+.ach-title {
+  margin: 26px 0 12px !important;
+}
+.ach-badges {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ach-badge {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 14px 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  text-align: center;
+  color: #5a6b80;
+}
+.ach-badge b {
+  color: var(--navy);
+  font-size: 14px;
+}
+.ach-badge small {
+  font-size: 12px;
+  line-height: 1.35;
+}
+.ach-badge-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--line);
+  color: #5a6b80;
+}
+.ach-badge.earned {
+  border-color: var(--green);
+}
+.ach-badge.earned .ach-badge-icon {
+  background: var(--green);
+  color: #fff;
+}
+.ach-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .ach-card {
+    grid-template-columns: 1fr;
+  }
+  .ach-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .ach-page h1 {
+    font-size: 26px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ach-bar span {
+    transition: none;
+  }
+}

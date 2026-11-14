@@ -74,9 +74,13 @@ import "./styles.css";
 
 import { supabase, supabaseReady } from "./supabase.js";
 import { dayKey } from "./lib/time.js";
-import { advanceStreak } from "./lib/streak.js";
+import { advanceStreak, earnFreeze, settleFreeze } from "./lib/streak.js";
+import { countsForStreak, levelFor, normalizeDaily } from "./lib/xp.js";
+import { newlyEarned } from "./lib/badges.js";
 import { useWordCards } from "./hooks/useWordCards.js";
+import { useGamification } from "./hooks/useGamification.js";
 import Review, { ReviewDeckSummary } from "./components/Review.jsx";
+import Achievements, { ProgressCard } from "./components/Achievements.jsx";
 
 const API = "/api";
 const cx = (...values) => values.filter(Boolean).join(" ");
@@ -238,6 +242,88 @@ function App() {
     userId: session?.user?.id || null,
     completedIndexes,
   });
+  const gam = useGamification({ supabase, userId: session?.user?.id || null });
+  const reviewsToday = normalizeDaily(gam.stats.extra.daily, localDateKey()).reviews;
+  const deckWithXp = useMemo(
+    () => ({
+      ...deck,
+      submitReview: (key, rating, mode) => {
+        deck.submitReview(key, rating, mode);
+        gam.award({ type: "review", rating });
+      },
+    }),
+    [deck, gam.award],
+  );
+
+  // XP for a new active day (once per day).
+  useEffect(() => {
+    if (gam.status !== "ready") return;
+    const day = localDateKey();
+    if (!(user.days || []).includes(day) || !user.streak) return;
+    if (gam.stats.extra.streakXpDay === day) return;
+    gam.award({ type: "streak_day", streak: user.streak });
+    gam.markStreakXpDay(day);
+  }, [gam.status, user.days, user.streak, gam.stats.extra.streakXpDay]);
+
+  // Ten word reviews count as an active day, like a lesson does.
+  useEffect(() => {
+    if (gam.status !== "ready" || deck.status !== "ready") return;
+    if (supabase && !profileLoaded.current) return;
+    const day = localDateKey();
+    if ((user.days || []).includes(day)) return;
+    if (!countsForStreak({ lessonDone: false, reviewsToday })) return;
+    const settle = settleFreeze({
+      days: user.days || [],
+      freezeDays: gam.stats.extra.freezeDays,
+      freezes: gam.stats.freezes,
+      today: day,
+    });
+    if (settle.used) gam.applyFreeze(settle);
+    setUser((old) => {
+      const next = advanceStreak({
+        streak: old.streak || 0,
+        days: old.days || [],
+        freezeDays: settle.freezeDays,
+        today: day,
+      });
+      return {
+        ...old,
+        streak: next,
+        bestStreak: Math.max(old.bestStreak || 0, next),
+        days: [...new Set([...(old.days || []), day])],
+      };
+    });
+  }, [gam.status, deck.status, reviewsToday, user.days]);
+
+  // One streak freeze for every 7 days in a row.
+  useEffect(() => {
+    if (gam.status !== "ready" || !user.streak) return;
+    const result = earnFreeze({
+      streak: user.streak,
+      lastGrantedAt: gam.stats.extra.lastFreezeStreak,
+      freezes: gam.stats.freezes,
+    });
+    if (result.lastGrantedAt === gam.stats.extra.lastFreezeStreak && !result.granted)
+      return;
+    gam.grantFreeze(result);
+    if (result.granted) setToast("You earned a streak freeze!");
+  }, [gam.status, user.streak]);
+
+  // Unlock badges when a threshold is crossed.
+  useEffect(() => {
+    if (gam.status !== "ready") return;
+    const fresh = newlyEarned(gam.stats.badges, {
+      completedCount: Math.min(30, user.completed ?? completed.size),
+      streak: user.streak || 0,
+      bestStreak: user.bestStreak || 0,
+      wordsLearned: deck.rows.filter((r) => r.state === 2).length,
+      reviewsTotal: gam.stats.extra.reviewsTotal,
+      level: levelFor(gam.stats.xp).level,
+    });
+    if (!fresh.length) return;
+    gam.unlockBadges(fresh.map((b) => b.id));
+    setToast(`Badge unlocked: ${fresh[0].title}`);
+  }, [gam.status, gam.stats.xp, gam.stats.extra.reviewsTotal, user.streak, user.completed, completed, deck.rows]);
 
   useEffect(() => {
     fetch(`${API}/health`)
@@ -348,6 +434,22 @@ function App() {
         createNoTranscriptFeedback(lessons[selected], seconds)),
       attemptNumber,
     };
+    const day = localDateKey();
+    const settle = settleFreeze({
+      days: user.days || [],
+      freezeDays: gam.stats.extra.freezeDays,
+      freezes: gam.stats.freezes,
+      today: day,
+    });
+    if (settle.used) gam.applyFreeze(settle);
+    const firstForCard =
+      !(user.submissions || []).some(
+        (submission) =>
+          Number(submission.lessonIndex) === selected &&
+          Number(submission.recordingDuration || 0) >=
+            lessons[selected].minimumDurationSeconds,
+      ) && seconds >= lessons[selected].minimumDurationSeconds;
+    gam.award({ type: firstForCard ? "lesson_first" : "lesson_retry" });
     setUser((old) => {
       const currentDay = localDateKey();
       const previousSubmissions = old.submissions || [];
@@ -360,6 +462,7 @@ function App() {
         : advanceStreak({
             streak: old.streak || 0,
             days: old.days || [],
+            freezeDays: settle.freezeDays,
             today: currentDay,
           });
       const firstSubmissionForCard =
@@ -546,6 +649,13 @@ function App() {
             <span>Word review</span>
           </button>
           <button
+            onClick={() => navigate("achievements")}
+            className={cx("nav-link", page === "achievements" && "active")}
+          >
+            <Trophy size={18} />
+            <span>Level and badges</span>
+          </button>
+          <button
             onClick={() => navigate("certificate")}
             className={cx("nav-link", page === "certificate" && "active")}
           >
@@ -619,7 +729,9 @@ function App() {
                   ? "30-day journey"
                   : page === "review"
                     ? "Word review"
-                    : "My certificate"}
+                    : page === "achievements"
+                      ? "Level and badges"
+                      : "My certificate"}
             </b>
           </div>
           <div className="topbar-right">
@@ -651,6 +763,8 @@ function App() {
                 token,
                 lessons,
                 deck,
+                gam,
+                reviewsToday,
               }}
             />
           )}
@@ -666,7 +780,24 @@ function App() {
             />
           )}
           {page === "review" && (
-            <Review {...{ deck, speakWord, navigate, completedCount }} />
+            <Review
+              {...{ speakWord, navigate, completedCount }}
+              deck={deckWithXp}
+            />
+          )}
+          {page === "achievements" && (
+            <Achievements
+              gam={gam}
+              streak={user.streak || 0}
+              reviewsToday={reviewsToday}
+              lessonDone={(user.submissions || []).some(
+                (s) =>
+                  s.day === localDateKey() &&
+                  Number(s.recordingDuration ?? 0) >=
+                    (lessons[Number(s.lessonIndex)]?.minimumDurationSeconds ||
+                      Infinity),
+              )}
+            />
           )}
           {page === "certificate" && (
             <Certificate {...{ user, completedCount, setPage }} />
@@ -871,6 +1002,8 @@ function Dashboard({
   token,
   lessons,
   deck,
+  gam,
+  reviewsToday,
 }) {
   const todayAttempt = (user.submissions || [])
     .filter((submission) => submission.day === localDateKey())
@@ -921,6 +1054,12 @@ function Dashboard({
           <ChevronDown size={14} />
         </button>
       </section>
+      <ProgressCard
+        gam={gam}
+        lessonDone={Boolean(todayCardComplete)}
+        reviewsToday={reviewsToday}
+        navigate={navigate}
+      />
       <ReviewDeckSummary
         rows={deck.rows}
         status={deck.status}
