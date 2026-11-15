@@ -115,9 +115,25 @@
 }
 .review-progress span {
   display: block;
+  width: 100%;
   height: 100%;
-  background: var(--blue);
-  transition: width 0.25s ease;
+  background: var(--primary);
+  transform-origin: left;
+  transform: scaleX(var(--p, 0));
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.review-enter {
+  animation: review-enter var(--dur-med) var(--ease-out);
+}
+@keyframes review-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .review-count {
   margin: 10px 0 18px;
@@ -249,6 +265,9 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .review-enter {
+    animation: none;
+  }
   .review-progress span {
     transition: none;
   }

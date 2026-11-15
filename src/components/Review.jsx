@@ -247,9 +247,9 @@ export default function Review({
   }
 
   return (
-    <section className="review-card" aria-live="polite">
+    <section key={position} className="review-card review-enter" aria-live="polite">
       <div className="review-progress" aria-hidden="true">
-        <span style={{ width: `${(position / queue.length) * 100}%` }} />
+        <span style={{ "--p": position / queue.length }} />
       </div>
       <p className="review-count">
         {position + 1} of {queue.length}

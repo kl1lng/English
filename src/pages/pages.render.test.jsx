@@ -35,6 +35,8 @@ describe("pages render without a browser", () => {
     const text = html.replace(/<!-- -->/g, "");
     expect(text).toContain("Hey Antoshka");
     expect(text).toContain("Level 1");
+    // The level bar scales with transform (cheap to animate), not with width.
+    expect(html).toContain("--p:0");
   });
 
   it("Journey lists the lessons", () => {

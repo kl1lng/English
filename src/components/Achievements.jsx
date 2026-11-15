@@ -59,7 +59,7 @@ export function ProgressCard({ gam, lessonDone, reviewsToday, navigate }) {
             aria-valuemax={100}
             aria-valuenow={lvl.pct}
           >
-            <span style={{ width: `${lvl.pct}%` }} />
+            <span style={{ "--p": lvl.pct / 100 }} />
           </div>
         </div>
       </div>
@@ -97,7 +97,7 @@ function Skill({ label, value, note }) {
         aria-valuemax={100}
         aria-valuenow={pct}
       >
-        <span style={{ width: `${pct}%` }} />
+        <span style={{ "--p": pct / 100 }} />
       </div>
     </li>
   );
