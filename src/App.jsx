@@ -1,4 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import OfflineBanner from "./components/OfflineBanner.jsx";
+import { useOnline } from "./hooks/useOnline.js";
 import ThemeToggle from "./components/ThemeToggle.jsx";
 import {
   ArrowRight,
@@ -151,6 +154,7 @@ export default function App() {
     userId: session?.user?.id || null,
     completedIndexes,
   });
+  const online = useOnline();
   const gam = useGamification({ supabase, userId: session?.user?.id || null });
   const telegram = useTelegramLink({ supabase, userId: session?.user?.id || null });
   const reviewsToday = normalizeDaily(gam.stats.extra.daily, localDateKey()).reviews;
@@ -696,6 +700,8 @@ export default function App() {
           </div>
         </header>
         <div className="page-content">
+          <OfflineBanner online={online} />
+          <ErrorBoundary key={page}>
           {page === "home" && (
             <Dashboard
               {...{
@@ -766,6 +772,7 @@ export default function App() {
           {page === "certificate" && (
             <Certificate {...{ user, completedCount, setPage }} />
           )}
+          </ErrorBoundary>
         </div>
         <footer className="footer">
           <span>

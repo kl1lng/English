@@ -1,4 +1,5 @@
 import React from "react";
+import Skeleton from "./Skeleton.jsx";
 import {
   Award,
   BookOpen,
@@ -113,7 +114,7 @@ export default function Achievements({
   telegram = null,
 }) {
   if (gam.status === "loading")
-    return <p className="ach-note" role="status">Loading your progress…</p>;
+    return <Skeleton lines={4} />;
   if (gam.status === "unavailable")
     return (
       <section className="ach-page">

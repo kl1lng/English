@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import Skeleton from "./Skeleton.jsx";
 import { ArrowRight, Check, Layers, RotateCcw, Volume2, X } from "lucide-react";
 import { buildWordIndex } from "../lib/deck.js";
 import { buildChoices, makeCloze } from "../lib/cloze.js";
@@ -156,7 +157,7 @@ export default function Review({
   });
 
   if (status === "loading")
-    return <p className="review-note" role="status">Loading your words…</p>;
+    return <Skeleton lines={4} />;
   if (status === "unavailable")
     return (
       <section className="review-card review-empty">
