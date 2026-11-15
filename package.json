@@ -10,7 +10,8 @@
     "start": "node server/index.js",
     "dev:web": "vite",
     "test": "vitest run",
-    "audit:css": "node scripts/css-audit.mjs"
+    "audit:css": "node scripts/css-audit.mjs",
+    "audit:css:strict": "node scripts/css-audit.mjs --strict"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
