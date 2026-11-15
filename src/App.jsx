@@ -241,6 +241,17 @@ export default function App() {
   }, [gam.status, gam.stats.xp, gam.stats.extra.reviewsTotal, gam.stats.extra.dialoguesTotal, user.streak, user.completed, completed, deck.rows]);
 
   useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => {
+      if (e.key !== "Escape") return;
+      setMenuOpen(false);
+      document.querySelector(".menu-toggle")?.focus();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  useEffect(() => {
     fetch(`${API}/health`)
       .then((r) => r.json())
       .then((d) => {
@@ -539,6 +550,9 @@ export default function App() {
 
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#content">
+        Skip to main content
+      </a>
       <aside className={cx("sidebar", menuOpen && "sidebar-open")}>
         <div className="brand">
           <div className="brand-mark">
@@ -556,10 +570,11 @@ export default function App() {
           </button>
         </div>
         <div className="side-label">WORKSPACE</div>
-        <nav className="main-nav">
+        <nav className="main-nav" aria-label="Main">
           <button
             onClick={() => navigate("home")}
             className={cx("nav-link", page === "home" && "active")}
+            aria-current={page === "home" ? "page" : undefined}
           >
             <Home size={18} />
             <span>My dashboard</span>
@@ -567,6 +582,7 @@ export default function App() {
           <button
             onClick={() => navigate("journey")}
             className={cx("nav-link", page === "journey" && "active")}
+            aria-current={page === "journey" ? "page" : undefined}
           >
             <BookOpen size={18} />
             <span>30-day journey</span>
@@ -575,6 +591,7 @@ export default function App() {
           <button
             onClick={() => navigate("review")}
             className={cx("nav-link", page === "review" && "active")}
+            aria-current={page === "review" ? "page" : undefined}
           >
             <Layers size={18} />
             <span>Word review</span>
@@ -582,6 +599,7 @@ export default function App() {
           <button
             onClick={() => navigate("games")}
             className={cx("nav-link", page === "games" && "active")}
+            aria-current={page === "games" ? "page" : undefined}
           >
             <Puzzle size={18} />
             <span>Word games</span>
@@ -589,6 +607,7 @@ export default function App() {
           <button
             onClick={() => navigate("dialogue")}
             className={cx("nav-link", page === "dialogue" && "active")}
+            aria-current={page === "dialogue" ? "page" : undefined}
           >
             <MessageCircle size={18} />
             <span>Speaking partner</span>
@@ -596,6 +615,7 @@ export default function App() {
           <button
             onClick={() => navigate("achievements")}
             className={cx("nav-link", page === "achievements" && "active")}
+            aria-current={page === "achievements" ? "page" : undefined}
           >
             <Trophy size={18} />
             <span>Level and badges</span>
@@ -603,6 +623,7 @@ export default function App() {
           <button
             onClick={() => navigate("certificate")}
             className={cx("nav-link", page === "certificate" && "active")}
+            aria-current={page === "certificate" ? "page" : undefined}
           >
             <Award size={18} />
             <span>My certificate</span>
@@ -610,7 +631,11 @@ export default function App() {
         </nav>
         <div className="side-label journey-label">
           YOUR JOURNEY{" "}
-          <button className="mini-add" onClick={() => navigate("journey")}>
+          <button
+            className="mini-add"
+            aria-label="Open the 30-day journey"
+            onClick={() => navigate("journey")}
+          >
             <Plus size={14} />
           </button>
         </div>
@@ -650,6 +675,7 @@ export default function App() {
           </div>
           <button
             className="icon-btn profile-more"
+            aria-label="Account and sign-in"
             onClick={() => setModal("auth")}
           >
             <MoreHorizontal size={19} />
@@ -657,7 +683,7 @@ export default function App() {
         </div>
       </aside>
 
-      <main className="main-area">
+      <main className="main-area" id="content" tabIndex={-1}>
         <header className="topbar">
           <button
             className="icon-btn menu-toggle"

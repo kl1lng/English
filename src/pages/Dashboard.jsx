@@ -204,7 +204,7 @@ export default function Dashboard({
               Little words, big world <Sparkles size={12} />
             </div>
           </div>
-          <div className="word-decoration">a–z</div>
+          <div className="word-decoration" aria-hidden="true">a–z</div>
         </div>
       </section>
       <section className="today-section">
@@ -291,7 +291,11 @@ export default function Dashboard({
             <div className="section-kicker">COMING UP</div>
             <h2>Little places, big stories</h2>
           </div>
-          <button className="circle-nav" onClick={() => navigate("journey")}>
+          <button
+            className="circle-nav"
+            aria-label="See all lessons"
+            onClick={() => navigate("journey")}
+          >
             <ArrowRight size={16} />
           </button>
         </div>

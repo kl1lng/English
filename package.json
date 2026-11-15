@@ -28,6 +28,7 @@
     "vite": "^7.3.6"
   },
   "devDependencies": {
+    "axe-core": "^4.14.0",
     "concurrently": "^10.0.5",
     "prettier": "^3.9.9",
     "vitest": "^5.1.0"

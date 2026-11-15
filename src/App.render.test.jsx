@@ -13,6 +13,11 @@ describe("App shell", () => {
     expect(html).toContain("My dashboard");
     expect(html).toContain("Word review");
     expect(html).toContain("Hey Antoshka");
+    // Landmarks and navigation semantics
+    expect(html).toContain('class="skip-link" href="#content"');
+    expect(html).toContain('<main class="main-area" id="content"');
+    expect(html).toContain('<nav class="main-nav" aria-label="Main"');
+    expect(html).toMatch(/aria-current="page"/);
     vi.unstubAllEnvs();
   });
 });

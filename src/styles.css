@@ -72,7 +72,7 @@ select:focus-visible {
   line-height: 1.05;
 }
 .brand-name > span {
-  color: #ed9a69;
+  color: var(--accent-text);
 }
 .brand-name small {
   display: block;
@@ -116,7 +116,7 @@ select:focus-visible {
 }
 .nav-link.active {
   background: var(--surface-2);
-  color: #4d87dc;
+  color: var(--link);
 }
 .nav-link.active > svg {
   stroke-width: 2.2;
@@ -356,7 +356,7 @@ select:focus-visible {
 }
 .streak-pill span {
   font-size: var(--fs-xs);
-  color: #a48e81;
+  color: var(--text-muted);
   font-weight: 600;
 }
 .top-avatar {
@@ -748,7 +748,7 @@ select:focus-visible {
   gap: 6px;
   border: 0;
   background: transparent;
-  color: #6b94ce;
+  color: var(--link);
   font-size: var(--fs-xs);
   font-weight: 700;
   white-space: nowrap;
@@ -878,7 +878,7 @@ select:focus-visible {
   background: var(--surface-2);
   border-radius: 6px;
   padding: 7px 9px;
-  color: #598bd0;
+  color: var(--link);
   font-size: var(--fs-xs);
   font-weight: 800;
   display: flex;
@@ -983,7 +983,7 @@ select:focus-visible {
   align-items: center;
   gap: 9px;
   text-align: left;
-  color: #6590c9;
+  color: var(--link);
 }
 .save-progress-banner > span:first-child {
   width: 26px;
@@ -2487,7 +2487,7 @@ select:focus-visible {
 }
 .today-chip {
   background: var(--surface-2);
-  color: #628dc3;
+  color: var(--link);
   padding: 0 5px;
   font-size: var(--fs-xs);
   letter-spacing: 0.4px;
@@ -2585,7 +2585,7 @@ select:focus-visible {
   gap: 6px;
   border: 0;
   background: transparent;
-  color: #5486bf;
+  color: var(--link);
   font-size: var(--fs-xs);
   font-weight: 700;
   cursor: pointer;
@@ -2981,7 +2981,7 @@ select:focus-visible {
   gap: 8px;
   border: 0;
   border-radius: 7px;
-  background: #588dd1;
+  background: var(--primary-strong);
   color: var(--on-primary);
   padding: 10px 13px;
   font-size: var(--fs-xs);

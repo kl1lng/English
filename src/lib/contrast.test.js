@@ -19,6 +19,8 @@ const dark = { ...light, ...readBlock('[data-theme="dark"] {') };
 const PAIRS = [
   ["text", "bg"], ["text", "surface"], ["text-strong", "surface"], ["text-soft", "surface"],
   ["text-muted", "surface"], ["text-muted", "bg"], ["text-muted", "surface-2"],
+  ["muted", "surface"], ["muted", "surface-2"], ["accent-text", "surface"], ["accent-text", "warn-bg"],
+  ["link", "surface"], ["link", "surface-2"], ["link", "bg"],
   ["on-primary", "primary-strong"], ["warn-text", "warn-bg"], ["success-strong", "success-bg"],
 ];
 

@@ -1,0 +1,25 @@
+/* Keyboard and screen-reader helpers. */
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-3);
+  z-index: 200;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--primary-strong);
+  color: var(--on-primary);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: none;
+}
+#content:focus {
+  outline: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skip-link {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+}
