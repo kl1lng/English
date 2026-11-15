@@ -2,7 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { lessons } from "../lessons.js";
-import { AUDIO_ALIASES, audioBase, audioPath } from "./audio.js";
+import manifest from "../data/audio-manifest.json";
+import { AUDIO_ALIASES, audioBase, audioPath, hasRecording } from "./audio.js";
 
 const audioDir = path.resolve(__dirname, "../../public/audio");
 
@@ -29,5 +30,16 @@ describe("audio files", () => {
 
   it("has exactly the 14 known aliases", () => {
     expect(Object.keys(AUDIO_ALIASES).length).toBe(14);
+  });
+
+  it("keeps the recording manifest in sync with public/audio", () => {
+    const onDisk = fs.readdirSync(audioDir).filter((f) => f.endsWith(".m4a")).map((f) => f.replace(/\.m4a$/, "")).sort();
+    expect(manifest).toEqual(onDisk);
+  });
+
+  it("knows which words have a recording", () => {
+    expect(hasRecording("heritage")).toBe(true);
+    expect(hasRecording("civilisation")).toBe(true);
+    expect(hasRecording("zzzz-no-recording")).toBe(false);
   });
 });

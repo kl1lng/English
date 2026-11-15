@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import SayIt from "./SayIt.jsx";
 import { ArrowRight, Check, Puzzle, RotateCcw, Volume2 } from "lucide-react";
 import { buildWordIndex, deckKeysForLessons } from "../lib/deck.js";
 import { isOrderCorrect, makeOrder, makePairs } from "../lib/games.js";
@@ -190,7 +191,7 @@ export default function Games({ completedIndexes, award, speakWord, navigate }) 
     <section className="games-page">
       <h1>Word games</h1>
       <div className="games-tabs" role="tablist" aria-label="Choose a game">
-        {[["pairs", "Match pairs"], ["order", "Build the sentence"]].map(([id, label]) => (
+        {[["pairs", "Match pairs"], ["order", "Build the sentence"], ["sayit", "Say it"]].map(([id, label]) => (
           <button key={id} role="tab" aria-selected={tab === id} className={tab === id ? "on" : ""} onClick={() => setTab(id)}>
             {label}
           </button>
@@ -199,8 +200,10 @@ export default function Games({ completedIndexes, award, speakWord, navigate }) 
       <div className="games-card" role="tabpanel">
         {tab === "pairs" ? (
           <Pairs pool={pool} award={award} />
-        ) : (
+        ) : tab === "order" ? (
           <Order pool={pool} award={award} speakWord={speakWord} />
+        ) : (
+          <SayIt pool={pool} speakWord={speakWord} />
         )}
       </div>
       <p className="games-note"><Check size={14} aria-hidden="true" /> Each finished round earns a little XP, up to a daily limit.</p>
