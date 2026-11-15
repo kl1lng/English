@@ -1,4 +1,5 @@
 import React from "react";
+import { getCourse } from "../courses.js";
 import { dayKey } from "../lib/time.js";
 import { weeklyGoalProgress, weeklyStreak } from "../lib/weekly.js";
 import Skeleton from "./Skeleton.jsx";
@@ -21,6 +22,8 @@ import { BADGES } from "../lib/badges.js";
 import { MAX_FREEZES } from "../lib/streak.js";
 import { dailyGoalProgress, levelFor } from "../lib/xp.js";
 import "./achievements.css";
+
+const TOTAL = getCourse().lessons.length; // lessons in the learner's course
 
 const badgeIcons = {
   mic: Mic,
@@ -254,8 +257,8 @@ export default function Achievements({
         />
         <Skill
           label="Speaking"
-          value={completedCount / 30}
-          note={`${completedCount} of 30 lessons, ${stats.extra.dialoguesTotal || 0} conversations`}
+          value={completedCount / TOTAL}
+          note={`${completedCount} of {TOTAL} lessons, ${stats.extra.dialoguesTotal || 0} conversations`}
         />
         <Skill
           label="Listening"

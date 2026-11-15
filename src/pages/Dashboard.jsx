@@ -1,4 +1,5 @@
 import React from "react";
+import { getCourse } from "../courses.js";
 import { formatWeekly } from "../lib/weekly.js";
 import { MISTAKE_TAG_LABELS } from "../data/mistake-tags.js";
 import {
@@ -20,6 +21,8 @@ import Review, { ReviewDeckSummary } from "../components/Review.jsx";
 import Achievements, { ProgressCard } from "../components/Achievements.jsx";
 import { API, cx, formatTime, localDateKey } from "../lib/format.js";
 import PlaceIcon from "../components/PlaceIcon.jsx";
+
+const TOTAL = getCourse().lessons.length; // lessons in the learner's course
 
 export default function Dashboard({
   user,
@@ -139,7 +142,7 @@ export default function Dashboard({
             <Sparkles size={13} /> YOUR JOURNEY ACROSS KAZAKHSTAN
           </div>
           <h2>
-            30 days. 30 stories.
+            {TOTAL} days. {TOTAL} stories.
             <br />
             <em>A more confident you.</em>
           </h2>
@@ -208,7 +211,7 @@ export default function Dashboard({
             <small>LESSONS DONE</small>
             <div className="tile-number">
               {String(completedCount).padStart(2, "0")}
-              <span className="tile-denom"> / 30</span>
+              <span className="tile-denom"> / {TOTAL}</span>
             </div>
             <div className="tile-foot">
               You’re making progress <Sparkles size={12} />
@@ -265,7 +268,7 @@ export default function Dashboard({
             </h2>
           </div>
           <button className="text-link" onClick={() => navigate("journey")}>
-            See all 30 days <ArrowRight size={15} />
+            See all {TOTAL} days <ArrowRight size={15} />
           </button>
         </div>
         <div className="lesson-feature">
@@ -339,7 +342,7 @@ export default function Dashboard({
         </div>
         <div className="up-next-grid">
           {lessons
-            .slice(Math.min(nextIndex + 1, 27), Math.min(nextIndex + 4, 30))
+            .slice(Math.min(nextIndex + 1, TOTAL - 3), Math.min(nextIndex + 4, TOTAL))
             .map((l, i) => (
               <button
                 className="place-card"
@@ -357,7 +360,7 @@ export default function Dashboard({
                 <div className="place-caption">
                   <small>
                     DAY{" "}
-                    {String(Math.min(nextIndex + i + 2, 30)).padStart(2, "0")} ·{" "}
+                    {String(Math.min(nextIndex + i + 2, TOTAL)).padStart(2, "0")} ·{" "}
                     {l.place}
                   </small>
                   <b>{l.title}</b>

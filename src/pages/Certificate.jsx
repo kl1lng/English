@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getCourse } from "../courses.js";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -10,6 +11,8 @@ import {
 } from "lucide-react";
 import { lessons } from "../lessons.js";
 import { API, cx, formatTime, localDateKey } from "../lib/format.js";
+
+const TOTAL = getCourse().lessons.length; // lessons in the learner's course
 
 export function CertificateArtwork({ name, date, preview = false }) {
   return (
@@ -40,7 +43,7 @@ export function CertificateArtwork({ name, date, preview = false }) {
           </span>
         </div>
         <div className="cert-program-mark">
-          <span>30</span>
+          <span>{TOTAL}</span>
           <small>DAY<br />JOURNEY</small>
         </div>
       </div>
@@ -54,13 +57,13 @@ export function CertificateArtwork({ name, date, preview = false }) {
         <p className="cert-awarded-to">This certificate is proudly presented to</p>
         <h3>{name || "Antoshka"}</h3>
         <p className="cert-description">
-          for completing the <b>30-Day Speaking Booster</b> and sharing stories
+          for completing the <b>{TOTAL}-Day Speaking Booster</b> and sharing stories
           about the places, history and culture of Kazakhstan in English.
         </p>
         <div className="cert-achievements">
-          <span><Check size={12} /> 30 daily speaking challenges</span>
+          <span><Check size={12} /> {TOTAL} daily speaking challenges</span>
           <i />
-          <span><MapPinned size={13} /> 30 stories of Kazakhstan</span>
+          <span><MapPinned size={13} /> {TOTAL} stories of Kazakhstan</span>
         </div>
       </div>
       <div className="cert-footer-row">
@@ -72,10 +75,10 @@ export function CertificateArtwork({ name, date, preview = false }) {
           <small>ISSUED BY</small>
           <b>SpeakKaz · English learning journey</b>
         </div>
-        <div className="cert-seal" aria-label="30 day completion award">
+        <div className="cert-seal" aria-label={`${TOTAL} day completion award`}>
           <span className="cert-seal-inner">
             <Award size={20} strokeWidth={1.65} />
-            <small>30<br />DAYS</small>
+            <small>{TOTAL}<br />DAYS</small>
           </span>
         </div>
       </div>
@@ -95,7 +98,7 @@ export default function Certificate({ user, completedCount, setPage }) {
         lesson.minimumDurationSeconds
     );
   });
-  const earnedOn = new Set(validSubmissions.map((submission) => Number(submission.lessonIndex))).size >= 30
+  const earnedOn = new Set(validSubmissions.map((submission) => Number(submission.lessonIndex))).size >= TOTAL
     ? validSubmissions
         .map((submission) => new Date(submission.submittedAt || submission.recordingTimestamp || 0))
         .filter((date) => !Number.isNaN(date.getTime()))
@@ -112,7 +115,7 @@ export default function Certificate({ user, completedCount, setPage }) {
       <div className="section-kicker">A MILESTONE WORTH CELEBRATING</div>
       <h1>Your certificate</h1>
       <p>Thirty little steps add up to something remarkable.</p>
-      {completedCount >= 30 ? (
+      {completedCount >= TOTAL ? (
         <>
           <CertificateArtwork name={user.name} date={certificateDate} />
           <button
@@ -129,14 +132,14 @@ export default function Certificate({ user, completedCount, setPage }) {
           </div>
           <h2>Your story is still unfolding.</h2>
           <p>
-            Finish all 30 speaking challenges to unlock your certificate. You’ve
-            completed <b>{completedCount} of 30</b> days so far — every practice
+            Finish all {TOTAL} speaking challenges to unlock your certificate. You’ve
+            completed <b>{completedCount} of {TOTAL}</b> days so far — every practice
             counts.
           </p>
           <div className="cert-bar">
-            <span style={{ width: `${(completedCount / 30) * 100}%` }} />
+            <span style={{ width: `${(completedCount / TOTAL) * 100}%` }} />
           </div>
-          <div className="cert-count">{completedCount} / 30 DAYS</div>
+          <div className="cert-count">{completedCount} / {TOTAL} DAYS</div>
           <button className="primary-cta" onClick={() => setPage("journey")}>
             Continue your journey <ArrowRight size={16} />
           </button>
@@ -148,7 +151,7 @@ export default function Certificate({ user, completedCount, setPage }) {
           </button>
         </div>
       )}
-      {showPreview && completedCount < 30 && (
+      {showPreview && completedCount < TOTAL && (
         <div
           className="cert-preview-backdrop"
           onMouseDown={(event) => {
@@ -176,11 +179,11 @@ export default function Certificate({ user, completedCount, setPage }) {
             </div>
             <CertificateArtwork
               name={user.name}
-              date="Earned after day 30"
+              date={`Earned after day ${TOTAL}`}
               preview
             />
             <p className="cert-preview-note">
-              This is a sample. Your certificate unlocks after all 30 challenges
+              This is a sample. Your certificate unlocks after all {TOTAL} challenges
               are complete.
             </p>
           </section>

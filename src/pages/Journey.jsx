@@ -1,4 +1,5 @@
 import React from "react";
+import { getCourse } from "../courses.js";
 import {
   ArrowRight,
   Check,
@@ -10,6 +11,8 @@ import {
 import { lessons } from "../lessons.js";
 import { API, cx, formatTime, localDateKey } from "../lib/format.js";
 import PlaceIcon from "../components/PlaceIcon.jsx";
+
+const TOTAL = getCourse().lessons.length; // lessons in the learner's course
 
 export default function Journey({
   completed,
@@ -23,7 +26,7 @@ export default function Journey({
       <div className="journey-page-head">
         <div>
           <div className="section-kicker">A LITTLE BIT EVERY DAY</div>
-          <h1>Your 30-day journey</h1>
+          <h1>Your {TOTAL}-day journey</h1>
           <p>
             Thirty stories. Thirty chances to learn about Kazakhstan and find
             your voice.
@@ -32,7 +35,7 @@ export default function Journey({
         <div className="journey-progress">
           <div className="journey-progress-n">
             {String(completedCount).padStart(2, "0")}
-            <span> / 30 days</span>
+            <span> / {TOTAL} days</span>
           </div>
           <div className="journey-progress-track">
             <i style={{ width: `${progress}%` }} />

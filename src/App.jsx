@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { getCourse } from "./courses.js";
 import { usePwa } from "./hooks/usePwa.js";
 import { weekRange, weeklyStreak, weeklySummary } from "./lib/weekly.js";
 import { recommendFocus } from "./lib/focus.js";
@@ -55,6 +56,8 @@ import AuthModal from "./components/AuthModal.jsx";
 import LessonModal from "./components/LessonModal.jsx";
 import ChatPanel from "./components/ChatPanel.jsx";
 
+const TOTAL = getCourse().lessons.length; // lessons in the learner's course
+
 export default function App() {
   // With accounts configured, nobody sees the sample profile: people sign in first.
   const [user, setUser] = useState(supabaseReady ? emptyUser : fallbackUser);
@@ -99,7 +102,7 @@ export default function App() {
     [user],
   );
   const completedCount = Math.min(
-    30,
+    TOTAL,
     user.completed ??
       (user.submissions?.length
         ? new Set(
@@ -120,7 +123,7 @@ export default function App() {
   const activeSpeakingIndex = todaySubmissions.length
     ? Number(todaySubmissions.at(-1).lessonIndex)
     : completedCount;
-  const progress = Math.min(100, Math.round((completedCount / 30) * 100));
+  const progress = Math.min(100, Math.round((completedCount / TOTAL) * 100));
   const todayLabel = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "2-digit",
@@ -256,7 +259,7 @@ export default function App() {
   useEffect(() => {
     if (gam.status !== "ready") return;
     const fresh = newlyEarned(gam.stats.badges, {
-      completedCount: Math.min(30, user.completed ?? completed.size),
+      completedCount: Math.min(TOTAL, user.completed ?? completed.size),
       streak: user.streak || 0,
       bestStreak: user.bestStreak || 0,
       wordsLearned: deck.rows.filter((r) => r.state === 2).length,
@@ -559,8 +562,8 @@ export default function App() {
   function navigate(next) {
     setPage(next);
     setMenuOpen(false);
-    if (next === "certificate" && completedCount < 30)
-      setToast("Complete all 30 days to earn your certificate!");
+    if (next === "certificate" && completedCount < TOTAL)
+      setToast(`Complete all ${TOTAL} days to earn your certificate!`);
   }
 
   if (!authChecked) return <div className="app-shell" aria-busy="true" />;
@@ -617,8 +620,8 @@ export default function App() {
             aria-current={page === "journey" ? "page" : undefined}
           >
             <BookOpen size={18} />
-            <span>30-day journey</span>
-            <span className="nav-badge">30</span>
+            <span>{TOTAL}-day journey</span>
+            <span className="nav-badge">{TOTAL}</span>
           </button>
           <button
             onClick={() => navigate("review")}
@@ -665,7 +668,7 @@ export default function App() {
           YOUR JOURNEY{" "}
           <button
             className="mini-add"
-            aria-label="Open the 30-day journey"
+            aria-label={`Open the ${TOTAL}-day journey`}
             onClick={() => navigate("journey")}
           >
             <Plus size={14} />
@@ -682,7 +685,7 @@ export default function App() {
             <span style={{ width: `${progress}%` }} />
           </div>
           <div className="journey-caption">
-            {completedCount} of 30 days complete
+            {completedCount} of {TOTAL} days complete
           </div>
         </div>
         <div className="sidebar-spacer" />
@@ -735,7 +738,7 @@ export default function App() {
               {page === "home"
                 ? "My dashboard"
                 : page === "journey"
-                  ? "30-day journey"
+                  ? `${TOTAL}-day journey`
                   : page === "review"
                     ? "Word review"
                     : page === "games"
@@ -750,7 +753,7 @@ export default function App() {
           <div className="topbar-right">
             <div className="today-pill">
               <span className="live-dot" /> DAY{" "}
-              {Math.min(activeSpeakingIndex + 1, 30)}{" "}
+              {Math.min(activeSpeakingIndex + 1, TOTAL)}{" "}
               <span className="today-pill-sep">·</span> {todayLabel}
             </div>
             <button className="streak-pill" title="Your daily streak">
@@ -860,7 +863,7 @@ export default function App() {
           </span>
           <span>
             SMALL STEPS. BIG VOICES. <span className="footer-dot">●</span>{" "}
-            <b>{completedCount}/30</b> DAYS
+            <b>{completedCount}/{TOTAL}</b> DAYS
           </span>
         </footer>
       </main>
@@ -924,17 +927,17 @@ export default function App() {
               <BookOpen size={16} />
             </span>
             <span className="eyebrow">LESSONS FINISHED</span>
-            <span className="stat-more">30</span>
+            <span className="stat-more">{TOTAL}</span>
           </div>
           <div className="stat-value">
             {String(completedCount).padStart(2, "0")}
-            <span> / 30</span>
+            <span> / {TOTAL}</span>
           </div>
           <div className="mini-meter">
             <span style={{ width: `${progress}%` }} />
           </div>
           <small className="stat-note">
-            {30 - completedCount} more to your certificate{" "}
+            {TOTAL - completedCount} more to your certificate{" "}
             <Award size={12} className="inline-icon" />
           </small>
         </div>
