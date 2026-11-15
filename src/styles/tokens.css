@@ -1,0 +1,58 @@
+/* Design tokens for 30english. Components use these variables, never raw colours.
+   Light values equal the colours the app already used, so nothing changes visually.
+   The dark theme is added in the same file (see [data-theme="dark"]). */
+:root {
+  /* Surfaces and text */
+  --bg: #f5f8fc;
+  --surface: #ffffff;
+  --surface-2: #edf5ff;
+  --text: #25364a;
+  --text-strong: #152a41;
+  --text-muted: #5a6b80;
+  --border: #edf0f4;
+
+  /* Actions and states */
+  --primary: #4d8be8;
+  --primary-strong: #2f6bc4;
+  --on-primary: #ffffff;
+  --accent: #f69a62;
+  --success: #4eb69b;
+  --success-strong: #2f7f6a;
+  --success-bg: #eaf7f3;
+  --warn-text: #9a4b12;
+  --warn-bg: #fff3ea;
+
+  /* Type scale */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.75rem;
+  --fs-2xl: 2.25rem;
+
+  /* Space (4px step), radius, motion */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --dur-fast: 120ms;
+  --dur-med: 220ms;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Names used by the existing styles (aliases of the tokens above) */
+  --navy: var(--text-strong);
+  --blue: var(--primary);
+  --blue-strong: var(--primary-strong);
+  --light-blue: var(--surface-2);
+  --muted: #8c99a8;
+  --orange: var(--accent);
+  --line: var(--border);
+  --green: var(--success);
+}

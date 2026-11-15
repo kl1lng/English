@@ -6,14 +6,6 @@
   text-rendering: optimizeLegibility;
   font-optical-sizing: auto;
   font-weight: 400;
-  --navy: #152a41;
-  --blue: #4d8be8;
-  --light-blue: #edf5ff;
-  --muted: #8c99a8;
-  --orange: #f69a62;
-  --line: #edf0f4;
-  --green: #4eb69b;
-  --blue-strong: #2f6bc4;
 }
 * {
   box-sizing: border-box;

@@ -58,6 +58,7 @@ import { lessons } from "./lessons.js";
 import { createNoTranscriptFeedback } from "./feedback.js";
 import { speakWord } from "./lib/audio.js";
 
+import "./styles/tokens.css";
 import "./styles.css";
 
 import { supabase, supabaseReady } from "./supabase.js";
