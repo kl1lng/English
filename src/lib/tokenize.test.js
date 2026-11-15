@@ -16,6 +16,8 @@ describe("tokenizeCss", () => {
     expect(run("a{color:#34495f;}")).toBe("a{color:var(--text);}");
     expect(run("a{color:#44556a;}")).toBe("a{color:var(--text-soft);}");
     expect(run("a{color:#45596f;}")).toBe("a{color:var(--text-soft);}");
+    expect(run("a{color:#263a50;}")).toBe("a{color:var(--text);}");
+    expect(run("a{color:#22364c;}")).toBe("a{color:var(--text);}");
     expect(run("a{color:#5a6b80;}")).toBe("a{color:var(--text-muted);}");
     expect(run("a{color:#92a0ae;}")).toBe("a{color:var(--muted);}");
   });
@@ -25,6 +27,14 @@ describe("tokenizeCss", () => {
       const css = `a{color:${hex};}`;
       expect(run(css)).toBe(css);
     });
+  });
+
+  it("maps near-white and pastel backgrounds", () => {
+    expect(run("a{background:#fbfcfe;}")).toBe("a{background:var(--surface);}");
+    expect(run("a{background:#fbfdff;}")).toBe("a{background:var(--surface);}");
+    expect(run("a{background:#fff1e8;}")).toBe("a{background:var(--warn-bg);}");
+    expect(run("a{background:#fffaf6;}")).toBe("a{background:var(--surface);}");
+    expect(run("a{background:#edf7f2;}")).toBe("a{background:var(--success-bg);}");
   });
 
   it("leaves gradients, images, shadows and saturated colours alone", () => {

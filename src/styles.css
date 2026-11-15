@@ -67,7 +67,7 @@ select:focus-visible {
   font-family: Manrope, sans-serif;
   font-weight: 800;
   font-size: 17px;
-  color: #263a50;
+  color: var(--text);
   letter-spacing: -0.7px;
   line-height: 1.05;
 }
@@ -193,7 +193,7 @@ select:focus-visible {
 }
 .help-card {
   border: 1px solid var(--border);
-  background: #fbfcfe;
+  background: var(--surface);
   border-radius: 10px;
   min-height: 61px;
   padding: 10px 9px;
@@ -347,7 +347,7 @@ select:focus-visible {
   align-items: center;
   gap: 5px;
   border: 1px solid #f5e5dc;
-  background: #fff9f5;
+  background: var(--surface);
   color: #f19a63;
   border-radius: 20px;
   padding: 7px 10px;
@@ -404,7 +404,7 @@ select:focus-visible {
 .journey-page-head h1,
 .certificate-page h1 {
   font-family: Manrope, sans-serif;
-  color: #22364c;
+  color: var(--text);
   font-size: 24px;
   line-height: 1.25;
   letter-spacing: -0.75px;
@@ -503,8 +503,8 @@ select:focus-visible {
   align-items: center;
   gap: 10px;
   border: 0;
-  background: #f9a66e;
-  color: var(--text);
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: 10px;
   font-weight: 800;
   padding: 5px 6px 5px 12px;
@@ -624,7 +624,7 @@ select:focus-visible {
   flex: 0 0 auto;
 }
 .peach {
-  background: #fff0e7;
+  background: var(--warn-bg);
   color: #f09a63;
 }
 .lavender {
@@ -632,7 +632,7 @@ select:focus-visible {
   color: #8b7ada;
 }
 .mint {
-  background: #e8f7f2;
+  background: var(--success-bg);
   color: #54ae95;
 }
 .stat-tile small {
@@ -836,7 +836,7 @@ select:focus-visible {
   font:
     700 15px Manrope,
     sans-serif;
-  color: #263b50;
+  color: var(--text);
   letter-spacing: -0.3px;
   margin: 8px 0 4px;
 }
@@ -1064,7 +1064,7 @@ select:focus-visible {
 }
 .streak-card {
   border: 1px solid var(--border);
-  background: #fffaf6;
+  background: var(--surface);
   border-radius: 10px;
   padding: 12px 11px;
 }
@@ -1097,7 +1097,7 @@ select:focus-visible {
   font-size: 7px;
   letter-spacing: 0.45px;
   font-weight: 800;
-  background: #fff1e6;
+  background: var(--warn-bg);
   padding: 5px 6px;
   border-radius: 5px;
 }
@@ -1159,7 +1159,7 @@ select:focus-visible {
 }
 .stat-icon.orange {
   color: #ec9c66;
-  background: #fff2e9;
+  background: var(--warn-bg);
 }
 .stat-top .eyebrow {
   font-size: 7px;
@@ -1208,11 +1208,11 @@ select:focus-visible {
   font-size: 8px;
 }
 .word-cloud span:nth-child(2) {
-  background: #fff1e8;
+  background: var(--warn-bg);
   color: #c28762;
 }
 .word-cloud span:nth-child(3) {
-  background: #edf7f2;
+  background: var(--success-bg);
   color: #6e9e8f;
 }
 .word-cloud span:last-child {
@@ -1608,7 +1608,7 @@ select:focus-visible {
 .auth-error {
   border-radius: 6px;
   padding: 8px;
-  background: #fff1ed;
+  background: var(--warn-bg);
   color: #c26b50;
   font-size: 9px;
 }
@@ -1734,7 +1734,7 @@ select:focus-visible {
   padding: 10px 11px;
   border: 1px solid #f3e5d5;
   border-radius: 9px;
-  background: #fffaf3;
+  background: var(--surface);
   color: #db9a5a;
 }
 .quick-fact > svg {
@@ -1754,7 +1754,7 @@ select:focus-visible {
   line-height: 1.45;
 }
 .modal-block {
-  background: #fbfcfe;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 10px 11px;
@@ -1773,7 +1773,7 @@ select:focus-visible {
 }
 .modal-icon.orange {
   color: #e99561;
-  background: #fff0e6;
+  background: var(--warn-bg);
 }
 .modal-icon.blue {
   color: #6591cf;
@@ -1812,7 +1812,7 @@ select:focus-visible {
   width: 17px;
   height: 17px;
   border-radius: 50%;
-  background: #fff0e5;
+  background: var(--warn-bg);
   color: #e39b6d;
   display: grid;
   place-items: center;
@@ -1909,7 +1909,7 @@ select:focus-visible {
 .record-panel {
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: #f8fbff;
+  background: var(--surface);
   padding: 12px 12px 10px;
   display: flex;
   flex-direction: column;
@@ -2173,7 +2173,7 @@ select:focus-visible {
   margin-top: 7px;
   padding: 8px;
   border-radius: 6px;
-  background: #fff7ed;
+  background: var(--warn-bg);
 }
 .next-goal small {
   color: #c58a54;
@@ -2211,7 +2211,7 @@ select:focus-visible {
   border: 1px solid #d9e7f5;
   border-radius: 6px;
   color: #527fae;
-  background: #f3f8ff;
+  background: var(--surface);
   font-size: 8px;
   font-weight: 700;
   cursor: pointer;
@@ -2320,7 +2320,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 5px;
-  background: #f7f9fce6;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
   border-radius: 10px;
   padding: 5px 7px;
 }
@@ -2458,7 +2458,7 @@ select:focus-visible {
 }
 .day-card.day-next {
   border-color: #b8d4f5;
-  background: #fbfdff;
+  background: var(--surface);
   box-shadow: 0 0 0 2px #edf5ff;
 }
 .day-card-top {
@@ -2482,7 +2482,7 @@ select:focus-visible {
   place-items: center;
 }
 .done-chip {
-  background: #e9f7f0;
+  background: var(--success-bg);
   color: #52ab86;
 }
 .today-chip {
@@ -2772,7 +2772,7 @@ select:focus-visible {
   border: 1px solid #c7dadd;
   border-radius: 50%;
   color: var(--text-muted);
-  background: #f3f8f5;
+  background: var(--success-bg);
 }
 .cert-brand-lockup b {
   display: block;
@@ -2836,7 +2836,7 @@ select:focus-visible {
 }
 .certificate-paper .cert-content h2 {
   margin: 12px 0 7px;
-  color: #243f58;
+  color: var(--text);
   font: 500 clamp(24px, 3.5vw, 37px)/1.16 "Playfair Display", Georgia, serif;
   letter-spacing: -0.8px;
 }
@@ -2943,7 +2943,7 @@ select:focus-visible {
   border: 1px solid #cfaa6b;
   border-radius: 50%;
   color: #b48a4e;
-  background: #fffaf0;
+  background: var(--warn-bg);
   box-shadow: 0 0 0 3px #fffaf0, 0 0 0 4px #e5d5b6;
 }
 .cert-seal-inner {
@@ -3467,7 +3467,7 @@ select:focus-visible {
   align-items: flex-start;
   text-align: left;
   color: var(--muted);
-  background: #fff8ef;
+  background: var(--warn-bg);
   border: 1px solid #f6e8d9;
   border-radius: 7px;
   padding: 8px;
@@ -3553,7 +3553,7 @@ select:focus-visible {
 }
 .streak-milestones .milestone-earned {
   color: #bf835f;
-  background: #fff0e5;
+  background: var(--warn-bg);
 }
 .print-cert {
   margin: 15px auto 0;

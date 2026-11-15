@@ -126,7 +126,7 @@
 }
 .dlg-user {
   justify-self: end;
-  background: var(--navy);
+  background: var(--primary-strong);
   color: var(--on-primary);
 }
 .dlg-user .dlg-who {

@@ -43,8 +43,8 @@
 }
 .games-tabs button.on,
 .games-lang button.on {
-  background: var(--navy);
-  color: var(--on-primary);
+  background: var(--text-strong);
+  color: var(--surface);
 }
 .games-card {
   margin-top: 14px;

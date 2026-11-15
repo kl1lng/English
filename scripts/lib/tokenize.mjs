@@ -19,7 +19,7 @@ function parse(hex) {
     else hue = (r - g) / d + 4;
     hue = (hue * 60 + 360) % 360;
   }
-  return { hex: `#${h}`, l, s, hue };
+  return { hex: `#${h}`, l, s, hue, chroma: d };
 }
 
 const isBorder = (p) => /^(border|outline)(-(top|right|bottom|left))?(-color)?$/.test(p);
@@ -35,7 +35,7 @@ function tokenFor(prop, hex, single) {
     if (c.hex === "#9a4b12") return "var(--warn-text)";
     if (c.hex === "#2f7f6a") return "var(--success-strong)";
     // Only the blue-grey family used for text (hue ~195-235). Green, purple and warm greys stay.
-    if (c.s >= 0.35 || c.hue < 195 || c.hue > 235) return null;
+    if (c.chroma >= 0.25 || c.hue < 195 || c.hue > 235) return null;
     if (c.l < 0.2) return "var(--text-strong)";
     if (c.l < 0.3) return "var(--text)";
     if (c.l < 0.39) return "var(--text-soft)";
@@ -49,7 +49,9 @@ function tokenFor(prop, hex, single) {
     if (c.hex === "#edf5ff") return "var(--surface-2)";
     if (c.hex === "#eaf7f3") return "var(--success-bg)";
     if (c.hex === "#fff3ea") return "var(--warn-bg)";
-    if (c.l >= 0.975 && c.s < 0.6) return "var(--surface)";
+    if (c.l >= 0.975 && c.chroma < 0.06) return "var(--surface)";
+    if (c.l >= 0.93 && c.hue >= 10 && c.hue <= 45) return "var(--warn-bg)";
+    if (c.l >= 0.93 && c.hue >= 135 && c.hue <= 175) return "var(--success-bg)";
     if (c.l >= 0.93 && c.l < 0.975 && c.hue >= 200 && c.hue <= 235) return "var(--surface-2)";
     return null;
   }

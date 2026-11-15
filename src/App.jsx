@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import ThemeToggle from "./components/ThemeToggle.jsx";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -634,6 +635,7 @@ export default function App() {
           </span>
           <ChevronRight size={15} />
         </button>
+        <ThemeToggle />
         <div className="profile-mini">
           <div className="avatar">{user.name.slice(0, 1).toUpperCase()}</div>
           <div className="profile-mini-text">

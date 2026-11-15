@@ -17,8 +17,9 @@
   --primary-strong: #2f6bc4;
   --on-primary: #ffffff;
   --accent: #f69a62;
+  --on-accent: #152a41; /* dark text on the orange accent, in both themes */
   --success: #4eb69b;
-  --success-strong: #2f7f6a;
+  --success-strong: #287560;
   --success-bg: #eaf7f3;
   --warn-text: #9a4b12;
   --warn-bg: #fff3ea;
@@ -56,4 +57,26 @@
   --orange: var(--accent);
   --line: var(--border);
   --green: var(--success);
+}
+
+/* Dark theme: its own muted tones, not an inversion. Set by src/lib/theme.js. */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1826;
+  --surface: #152336;
+  --surface-2: #1c3150;
+  --text: #e6edf6;
+  --text-strong: #f5f8fc;
+  --text-soft: #c5d1df;
+  --text-muted: #a3b3c6;
+  --border: #29405c;
+  --primary: #5b97ee;
+  --primary-strong: #2f6bc4;
+  --accent: #f69a62;
+  --success: #5cc4a8;
+  --success-strong: #7fd6bd;
+  --success-bg: #14352e;
+  --warn-text: #f6b98a;
+  --warn-bg: #3a2a20;
+  --muted: #8a9bb0;
 }
