@@ -347,3 +347,30 @@
 .week-days span.on {
   background: var(--success);
 }
+
+.ach-week {
+  margin-top: var(--space-4);
+}
+.ach-week .ach-bar {
+  margin: var(--space-3) 0;
+}
+.ach-goal-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.ach-goal-days button {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-strong);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+}
+.ach-goal-days button.on {
+  border-color: var(--primary);
+  background: var(--surface-2);
+}

@@ -1,4 +1,6 @@
 import React from "react";
+import { dayKey } from "../lib/time.js";
+import { weeklyGoalProgress, weeklyStreak } from "../lib/weekly.js";
 import Skeleton from "./Skeleton.jsx";
 import {
   Award,
@@ -108,6 +110,7 @@ export default function Achievements({
   streak,
   lessonDone,
   reviewsToday,
+  days = [],
   completedCount = 0,
   wordsLearned = 0,
   wordsTotal = 0,
@@ -129,6 +132,9 @@ export default function Achievements({
   const lvl = levelFor(stats.xp);
   const earned = new Set(stats.badges);
   const goal = dailyGoalProgress({ goal: stats.dailyGoal, lessonDone, reviewsToday });
+  const today = dayKey();
+  const week = weeklyGoalProgress({ days, goalDays: stats.extra.weeklyGoal, today });
+  const weekStreakNow = weeklyStreak(days, stats.extra.weeklyGoal, today);
   return (
     <section className="ach-page">
       <header className="ach-head">
@@ -218,6 +224,26 @@ export default function Achievements({
           )}
         </div>
       )}
+
+      <div className="ach-panel ach-week">
+        <h2>Weekly goal</h2>
+        <p className="ach-note">
+          Practise on {week.target} days a week. A day counts with a lesson or 10 word reviews.
+        </p>
+        <div className="ach-bar" role="progressbar" aria-label="Active days this week" aria-valuemin={0} aria-valuemax={week.target} aria-valuenow={Math.min(week.done, week.target)}>
+          <span style={{ "--p": Math.min(1, week.done / week.target) }} />
+        </div>
+        <p className="ach-note">
+          {week.done} of {week.target} days this week. Weeks in a row: <b>{weekStreakNow}</b>.
+        </p>
+        <div role="radiogroup" aria-label="Choose your weekly goal" className="ach-goal-days">
+          {[3, 4, 5, 6].map((n) => (
+            <button key={n} role="radio" aria-checked={week.target === n} className={week.target === n ? "on" : ""} onClick={() => gam.setWeeklyGoal(n)}>
+              {n} days
+            </button>
+          ))}
+        </div>
+      </div>
 
       <h2 className="ach-title">Your skills</h2>
       <ul className="ach-skills">

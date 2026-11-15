@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatWeekly, weekRange, weeklySummary } from "./weekly.js";
+import { formatWeekly, normalizeGoalDays, weekRange, weeklyGoalProgress, weeklyStreak, weeklySummary } from "./weekly.js";
 
 describe("weekRange", () => {
   it("runs Monday to Sunday around any day", () => {
@@ -51,5 +51,43 @@ describe("formatWeekly", () => {
     expect(text).toContain("6-day streak");
     expect(text).toContain("Verb tenses");
     expect(text).not.toMatch(/conversation/i);
+  });
+});
+
+describe("weekly goal", () => {
+  const today = "2026-11-15"; // Sunday; this week is 2026-11-09..15
+  const week = (start, count) => Array.from({ length: count }, (_, i) => {
+    const d = new Date(`${start}T12:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + i);
+    return d.toISOString().slice(0, 10);
+  });
+
+  it("normalizes the goal and falls back to four days", () => {
+    expect(normalizeGoalDays(5)).toBe(5);
+    expect(normalizeGoalDays(undefined)).toBe(4);
+    expect(normalizeGoalDays(1)).toBe(4);
+    expect(normalizeGoalDays(9)).toBe(4);
+    expect(normalizeGoalDays("5")).toBe(5);
+  });
+
+  it("measures this week against the goal", () => {
+    expect(weeklyGoalProgress({ days: week("2026-11-09", 3), goalDays: 4, today })).toEqual({ done: 3, target: 4, met: false });
+    expect(weeklyGoalProgress({ days: week("2026-11-09", 4), goalDays: 4, today }).met).toBe(true);
+    expect(weeklyGoalProgress({ days: [], today })).toEqual({ done: 0, target: 4, met: false });
+  });
+
+  it("counts consecutive weeks that reached the goal", () => {
+    const days = [...week("2026-10-26", 4), ...week("2026-11-02", 5)]; // two past weeks met
+    expect(weeklyStreak(days, 4, today)).toBe(2);
+  });
+  it("lets the current week count only when it is already met, and never break the streak while it runs", () => {
+    const past = [...week("2026-10-26", 4), ...week("2026-11-02", 5)];
+    expect(weeklyStreak([...past, ...week("2026-11-09", 4)], 4, today)).toBe(3);
+    expect(weeklyStreak([...past, ...week("2026-11-09", 1)], 4, today)).toBe(2);
+  });
+  it("stops at a week that missed the goal and handles no data", () => {
+    const days = [...week("2026-10-19", 4), ...week("2026-10-26", 2), ...week("2026-11-02", 4)];
+    expect(weeklyStreak(days, 4, today)).toBe(1);
+    expect(weeklyStreak([], 4, today)).toBe(0);
   });
 });

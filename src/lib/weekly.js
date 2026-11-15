@@ -58,3 +58,37 @@ export function formatWeekly(s) {
   if (s.topTag && s.topTag !== "other") text += ` Most common slip: ${MISTAKE_TAG_LABELS[s.topTag]}.`;
   return text;
 }
+
+export const DEFAULT_GOAL_DAYS = 4;
+
+// A weekly goal is 3 to 6 active days. Anything else (or nothing) becomes 4.
+export function normalizeGoalDays(value) {
+  const n = Number(value);
+  return Number.isInteger(n) && n >= 3 && n <= 6 ? n : DEFAULT_GOAL_DAYS;
+}
+
+function activeDaysIn(days, range) {
+  return new Set(days.filter((d) => inRange(d, range))).size;
+}
+
+export function weeklyGoalProgress({ days = [], goalDays, today }) {
+  const target = normalizeGoalDays(goalDays);
+  const done = activeDaysIn(days, weekRange(today));
+  return { done, target, met: done >= target };
+}
+
+// Consecutive weeks that reached the goal, counted back from last week. The week in progress adds
+// one when it is already met and never breaks the streak while it is still running.
+export function weeklyStreak(days = [], goalDays, today, maxWeeks = 52) {
+  const target = normalizeGoalDays(goalDays);
+  const current = weekRange(today);
+  let streak = activeDaysIn(days, current) >= target ? 1 : 0;
+  let start = addDays(current.start, -7);
+  for (let i = 0; i < maxWeeks; i++) {
+    const range = { start, end: addDays(start, 6) };
+    if (activeDaysIn(days, range) < target) break;
+    streak += 1;
+    start = addDays(start, -7);
+  }
+  return streak;
+}

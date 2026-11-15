@@ -10,6 +10,7 @@ export const BADGES = [
   { id: "streak-30", title: "Unstoppable", text: "Practise 30 days in a row.", icon: "crown", test: (c) => Math.max(c.streak, c.bestStreak) >= 30 },
   { id: "first-review", title: "Memory starter", text: "Finish your first word review.", icon: "layers", test: (c) => c.reviewsTotal >= 1 },
   { id: "first-talk", title: "First conversation", text: "Finish a conversation with the speaking partner.", icon: "mic", test: (c) => (c.dialoguesTotal || 0) >= 1 },
+  { id: "rhythm-4", title: "Four-week rhythm", text: "Reach your weekly goal 4 weeks in a row.", icon: "compass", test: (c) => (c.weeklyStreak || 0) >= 4 },
   { id: "words-10", title: "Ten words", text: "Learn 10 words.", icon: "sparkles", test: (c) => c.wordsLearned >= 10 },
   { id: "words-100", title: "Word collector", text: "Learn 100 words.", icon: "star", test: (c) => c.wordsLearned >= 100 },
   { id: "level-5", title: "Level 5", text: "Reach level 5.", icon: "award", test: (c) => c.level >= 5 },

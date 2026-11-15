@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { weekRange, weeklySummary } from "./lib/weekly.js";
+import { weekRange, weeklyStreak, weeklySummary } from "./lib/weekly.js";
 import { recommendFocus } from "./lib/focus.js";
 import { useMistakes } from "./hooks/useMistakes.js";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
@@ -260,6 +260,7 @@ export default function App() {
       wordsLearned: deck.rows.filter((r) => r.state === 2).length,
       reviewsTotal: gam.stats.extra.reviewsTotal,
       dialoguesTotal: gam.stats.extra.dialoguesTotal || 0,
+      weeklyStreak: weeklyStreak(user.days || [], gam.stats.extra.weeklyGoal, localDateKey()),
       level: levelFor(gam.stats.xp).level,
     });
     if (!fresh.length) return;
@@ -821,6 +822,7 @@ export default function App() {
               wordsLearned={deck.rows.filter((r) => r.state === 2).length}
               wordsTotal={deck.rows.length}
               streak={user.streak || 0}
+              days={user.days || []}
               reviewsToday={reviewsToday}
               lessonDone={(user.submissions || []).some(
                 (s) =>

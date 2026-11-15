@@ -17,6 +17,7 @@ export const emptyStats = {
     daily: null,
     reviewsTotal: 0,
     streakXpDay: "",
+    weeklyGoal: 4,
   },
 };
 
@@ -162,6 +163,7 @@ export function useGamification({ supabase, userId }) {
       })),
     unlockBadges: (ids) =>
       patch((s) => ({ ...s, badges: [...new Set([...s.badges, ...ids])] })),
+    setWeeklyGoal: (weeklyGoal) => patch((s) => ({ ...s, extra: { ...s.extra, weeklyGoal } })),
     markStreakXpDay: (day) =>
       patch((s) => ({ ...s, extra: { ...s.extra, streakXpDay: day } })),
   };

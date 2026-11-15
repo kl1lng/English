@@ -102,6 +102,10 @@ describe("badges", () => {
     expect(newlyEarned(["first-voice"], { ...base, completedCount: 1 })).toEqual([]);
     expect(newlyEarned([], { ...base, streak: 7 }).map((b) => b.id)).toEqual(["streak-3", "streak-7"]);
   });
+  it("awards the four-week rhythm badge once the weekly streak reaches four", () => {
+    expect(newlyEarned([], { ...base, weeklyStreak: 3 })).toEqual([]);
+    expect(newlyEarned([], { ...base, weeklyStreak: 4 }).map((b) => b.id)).toEqual(["rhythm-4"]);
+  });
   it("has unique ids", () => {
     expect(new Set(BADGES.map((b) => b.id)).size).toBe(BADGES.length);
   });
