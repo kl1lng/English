@@ -2377,8 +2377,8 @@ select:focus-visible {
 .journey-banner {
   height: 72px;
   border-radius: 10px;
-  background: linear-gradient(100deg, #eaf3ff, #f5f8fe);
-  border: 1px solid #e4edf8;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
   padding: 12px 15px;
   display: flex;
   align-items: center;

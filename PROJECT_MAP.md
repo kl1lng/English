@@ -49,6 +49,18 @@ Built on 2026-11-14 following `docs/superpowers/plans/2026-11-14-engagement-and-
 
 SQL migrations `supabase/migrations/001` … `006` were applied to the `discover-kazakhstan` project on 2026-11-14 through the SQL Editor (7 tables, row-level security on, checked by a read-only query). Row-level security was not tested with real accounts. If a migration is missing, the matching screen shows "not set up yet" and everything else keeps working.
 
+## Learning, retention, design and content work (branch `feature/learning-design`, not merged)
+
+Built on 2026-11-15 following `docs/superpowers/plans/2026-11-15-learning-retention-design-content.md`; progress ledger in the plan's tasks (22 of 26 done or documented, see below).
+
+- **Structure:** `src/main.jsx` only mounts; `App.jsx`, `src/pages/` (Dashboard, Journey, Certificate), `src/components/`, `src/hooks/`, `src/lib/` (pure logic with tests). Sidebar/Topbar and profile hooks are still inside `App.jsx` (about 950 lines).
+- **Design system:** tokens in `src/styles/tokens.css` (light and dark), notes in `design-system/30english/MASTER.md`. Dark theme with a System/Light/Dark switch. `npm run audit:css` (and `audit:css:strict`) lists raw hex colours and tiny fonts; `scripts/css-tokenize.mjs` and `scripts/css-fonts.mjs` did the migration. Accessibility report: `docs/superpowers/reports/a11y-2026-11.md` (axe-core, no violations on seven pages in both themes).
+- **Learning:** mistakes are tagged and collected (`useMistakes`, table `learner_mistakes`), become "fix it" review cards, drive the dashboard "Today's focus" and the focus of a conversation; difficult-words mode; "Say it" self-check; hint audio for all 153 words (`src/lib/audio.js` maps 14 words to differently named files).
+- **Retention:** "This week" card and a Sunday Telegram summary (`messageFor`), weekly goal and weekly streak, installable app with offline cache (`public/sw.js`, tested rules in `public/sw-rules.js`).
+- **Content:** courses (`src/courses.js`), lesson validator test, reviewed-Kazakh pipeline (`scripts/kk-review.mjs`, table in `docs/kk-review/`), 20 conversation scenarios, outline of course 2 for approval (`docs/superpowers/course-2-outline.md`).
+- **Not done:** migration `007_mistakes.sql` is written but NOT applied (running SQL on production was denied); self-hosted photos (needs the owner's yes to download 60 files); course 2 lessons and its audio; native-speaker review of Kazakh text; friends and weekly league (needs server-side XP, belongs to the security stage); server voice (spike only, facts in `docs/superpowers/spikes/tts.md`).
+- **Not verified live:** microphone recording in "Say it", the install prompt, the service-worker update across two deployments, real Telegram messages, real model replies with tags.
+
 ## Environment variables
 
 Names only; never write values into the repository.
