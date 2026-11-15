@@ -171,6 +171,12 @@ export default function App() {
     [deck, gam.award],
   );
 
+  // Past mistakes become "fix it" cards in the word review (up to 5 new a day).
+  useEffect(() => {
+    if (deck.status !== "ready" || mistakes.status !== "ready" || !mistakes.items.length) return;
+    deck.addMistakes(mistakes.items);
+  }, [deck.status, mistakes.status, mistakes.items]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // XP for a new active day (once per day).
   useEffect(() => {
     if (gam.status !== "ready") return;

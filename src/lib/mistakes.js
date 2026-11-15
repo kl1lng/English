@@ -42,3 +42,21 @@ export function dedupeMistakes(stored, incoming) {
   }
   return fresh;
 }
+
+// Two sentences to choose from: the learner's wrong version and the corrected one.
+export function makeFixCard(original, corrected, rng = Math.random) {
+  const options = rng() < 0.5 ? [original, corrected] : [corrected, original];
+  return { options, answer: corrected };
+}
+
+// Mistakes that should become practice cards today: not in the deck yet, up to the daily limit.
+export function pickNewMistakeCards(items, deckKeys, doneToday = 0, max = 5) {
+  const room = Math.max(0, max - doneToday);
+  const picked = [];
+  for (const item of items) {
+    if (picked.length >= room) break;
+    if (deckKeys.has(mistakeKey(item.original, item.corrected))) continue;
+    picked.push(item);
+  }
+  return picked;
+}

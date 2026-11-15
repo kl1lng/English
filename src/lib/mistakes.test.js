@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dedupeMistakes, mistakeKey, mistakeStats } from "./mistakes.js";
+import { dedupeMistakes, makeFixCard, mistakeKey, mistakeStats, pickNewMistakeCards } from "./mistakes.js";
 
 const now = new Date("2026-11-15T12:00:00Z");
 const day = (n) => new Date(now.getTime() - n * 86400000).toISOString();
@@ -42,5 +42,30 @@ describe("dedupeMistakes", () => {
       { original: "a apple", corrected: "an apple" },
     ];
     expect(dedupeMistakes(stored, incoming)).toEqual([{ original: "a apple", corrected: "an apple" }]);
+  });
+});
+
+describe("makeFixCard", () => {
+  it("offers the wrong and the right sentence in an order the rng decides", () => {
+    const a = makeFixCard("I goed there", "I went there", () => 0.1);
+    const b = makeFixCard("I goed there", "I went there", () => 0.9);
+    expect(a.answer).toBe("I went there");
+    expect([...a.options].sort()).toEqual(["I goed there", "I went there"]);
+    expect(a.options).not.toEqual(b.options);
+  });
+});
+
+describe("pickNewMistakeCards", () => {
+  const m = (original) => ({ original, corrected: original + "!", tag: "tenses" });
+  it("takes at most the daily limit of mistakes that are not in the deck yet", () => {
+    const items = ["a", "b", "c", "d", "e", "f", "g"].map(m);
+    const inDeck = new Set([mistakeKey("a", "a!")]);
+    const picked = pickNewMistakeCards(items, inDeck, 0, 5);
+    expect(picked).toHaveLength(5);
+    expect(picked.map((x) => x.original)).not.toContain("a");
+  });
+  it("stops when today's limit is already used", () => {
+    expect(pickNewMistakeCards([m("a")], new Set(), 5, 5)).toEqual([]);
+    expect(pickNewMistakeCards([m("a"), m("b")], new Set(), 4, 5)).toHaveLength(1);
   });
 });

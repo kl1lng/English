@@ -3,6 +3,7 @@ import Skeleton from "./Skeleton.jsx";
 import { ArrowRight, Check, Layers, RotateCcw, Volume2, X } from "lucide-react";
 import { buildWordIndex } from "../lib/deck.js";
 import { buildChoices, makeCloze } from "../lib/cloze.js";
+import { makeFixCard } from "../lib/mistakes.js";
 import { dueCount, pickSession, Rating } from "../lib/srs.js";
 import "./review.css";
 
@@ -16,6 +17,7 @@ const ratingButtons = [
 
 function cardMode(position, entry) {
   // Rotate flip, fill-the-blank and listening; fall back to flip when a blank is not possible.
+  if (entry?.fix) return "fix";
   if (entry?.custom) return "flip"; // your own phrases have no blank or recording
   const slot = position % 3;
   if (slot === 1 && entry && makeCloze(entry.example, entry.term)) return "cloze";
@@ -79,6 +81,7 @@ export default function Review({
   }
 
   const key = queue?.[position];
+  const fixRow = key?.startsWith("m:") ? rows.find((r) => r.word_key === key) : null;
   const customTerm = key?.startsWith("c:")
     ? rows.find((r) => r.word_key === key)?.custom_term || key.slice(2).replace(/-/g, " ")
     : null;
@@ -86,10 +89,12 @@ export default function Review({
     () =>
       !key
         ? null
-        : customTerm !== null
+        : fixRow
+          ? { key, term: fixRow.custom_term, original: fixRow.custom_example, kk: "", ru: "", example: "", lessonIndex: -1, fix: true }
+          : customTerm !== null
           ? { key, term: customTerm, kk: "", ru: "", example: "", lessonIndex: -1, custom: true }
           : wordIndex.get(key) || null,
-    [key, customTerm],
+    [key, customTerm, fixRow?.custom_term, fixRow?.custom_example],
   );
   const mode = key ? cardMode(position, entry) : "flip";
   const cloze = useMemo(
@@ -97,6 +102,7 @@ export default function Review({
     [mode, entry],
   );
   const choices = useMemo(() => {
+    if (mode === "fix" && entry) return makeFixCard(entry.original, entry.term).options;
     if ((!cloze && mode !== "listen") || !entry) return [];
     const pool = [...wordIndex.values()]
       .filter((w) => w.lessonIndex === entry.lessonIndex)
@@ -310,9 +316,11 @@ export default function Review({
         </>
       )}
 
-      {(mode === "cloze" || mode === "listen") && (
+      {(mode === "cloze" || mode === "listen" || mode === "fix") && (
         <>
-          {mode === "cloze" ? (
+          {mode === "fix" ? (
+            <p className="review-ask">Which sentence is correct?</p>
+          ) : mode === "cloze" ? (
             <>
               <p className="review-ask">Choose the word that fits.</p>
               <p className="review-sentence">{cloze.text}</p>
@@ -331,7 +339,7 @@ export default function Review({
               </div>
             </>
           )}
-          <div className="review-choices" role="group" aria-label="Answers">
+          <div className={`review-choices ${mode === "fix" ? "review-choices-wide" : ""}`} role="group" aria-label="Answers">
             {choices.map((option) => {
               const isAnswer = option.toLowerCase() === entry.term.toLowerCase();
               const state = picked
@@ -358,7 +366,7 @@ export default function Review({
           {picked && (
             <>
               <p className="review-example">
-                {entry.kk} · {entry.ru}
+                {entry.fix ? `Correct: ${entry.term}` : `${entry.kk} · ${entry.ru}`}
               </p>
               <button className="review-primary" onClick={continueAfterChoice}>
                 Next <ArrowRight size={15} aria-hidden="true" />

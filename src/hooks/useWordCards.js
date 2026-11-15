@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { customKey, deckKeysForLessons } from "../lib/deck.js";
+import { mistakeKey, pickNewMistakeCards } from "../lib/mistakes.js";
 import { newCard, reviewRow, State } from "../lib/srs.js";
 import { dayKey } from "../lib/time.js";
 
@@ -23,7 +24,7 @@ function writeJson(key, value) {
 }
 
 const CARD_FIELDS =
-  "word_key, source, due, stability, difficulty, scheduled_days, learning_steps, reps, lapses, state, last_review";
+  "word_key, source, due, stability, difficulty, scheduled_days, learning_steps, reps, lapses, state, last_review, created_at";
 
 // The learner's word deck (spaced repetition). Signed-in learners are stored in
 // Supabase (table word_cards); without accounts the deck lives in localStorage.
@@ -199,6 +200,34 @@ export function useWordCards({ supabase, userId, completedIndexes }) {
     [byKey, supabase, userId, persist],
   );
 
+  // Turns the learner's mistakes into "fix it" cards (up to 5 new ones a day).
+  const addMistakes = useCallback(
+    (mistakes) => {
+      const now = new Date();
+      const today = dayKey(now);
+      const doneToday = Object.values(byKey).filter(
+        (r) => r.source === "mistake" && r.created_at && dayKey(new Date(r.created_at)) === today,
+      ).length;
+      const picked = pickNewMistakeCards(mistakes, new Set(Object.keys(byKey)), doneToday, 5);
+      if (!picked.length) return 0;
+      const created = picked.map((m) => ({
+        word_key: mistakeKey(m.original, m.corrected),
+        source: "mistake",
+        custom_term: m.corrected,
+        custom_example: m.original,
+        created_at: now.toISOString(),
+        ...newCard(now),
+      }));
+      const next = { ...byKey };
+      created.forEach((c) => (next[c.word_key] = c));
+      setByKey(next);
+      if (!supabase || !userId) writeJson(demoKey, next);
+      else persist(created, []);
+      return created.length;
+    },
+    [byKey, supabase, userId, persist],
+  );
+
   const rows = useMemo(() => Object.values(byKey), [byKey]);
   const today = dayKey();
   const doneToday = useMemo(() => {
@@ -219,6 +248,7 @@ export function useWordCards({ supabase, userId, completedIndexes }) {
     saveError,
     doneToday,
     addCustom,
+    addMistakes,
     canAddCustom: !supabase || !userId || customOk,
   };
 }

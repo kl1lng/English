@@ -231,6 +231,9 @@
   gap: 10px;
   margin-bottom: 16px;
 }
+.review-choices-wide {
+  grid-template-columns: 1fr;
+}
 .review-choice {
   display: inline-flex;
   align-items: center;
