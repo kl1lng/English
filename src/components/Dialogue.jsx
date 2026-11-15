@@ -180,7 +180,7 @@ export default function Dialogue({
           review at the end. Your recordings are not stored.
         </p>
         <ul className="dlg-list">
-          {scenarios.map((s) => {
+          {[...scenarios].sort((a, b) => a.unlockAfterLesson - b.unlockAfterLesson).map((s) => {
             const locked = completedCount < s.unlockAfterLesson;
             return (
               <li key={s.id}>

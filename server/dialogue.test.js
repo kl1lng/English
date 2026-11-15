@@ -26,6 +26,30 @@ describe("scenarios", () => {
   });
 });
 
+describe("scenario collection", () => {
+  it("offers twenty situations, at least eight at each level", () => {
+    expect(scenarios).toHaveLength(20);
+    expect(scenarios.filter((s) => s.level === "B1").length).toBeGreaterThanOrEqual(8);
+    expect(scenarios.filter((s) => s.level === "B2").length).toBeGreaterThanOrEqual(8);
+  });
+  it("gives every scenario a role, a goal, an opening line and target words", () => {
+    scenarios.forEach((s) => {
+      expect(s.aiRole.length, s.id).toBeGreaterThan(20);
+      expect(s.userGoal.length, s.id).toBeGreaterThan(15);
+      expect(s.opening.endsWith("?"), `${s.id} opening should end with a question`).toBe(true);
+      expect(s.targetWords.length, s.id).toBeGreaterThanOrEqual(2);
+    });
+  });
+  it("unlocks a scenario only after the lessons that teach its words", () => {
+    scenarios.forEach((s) =>
+      s.targetWords.forEach((w) => {
+        const firstLesson = lessons.findIndex((l) => l.words.some((x) => wordKey(x.term) === wordKey(w))) + 1;
+        expect(firstLesson, `${s.id}: ${w}`).toBeLessThanOrEqual(s.unlockAfterLesson);
+      }),
+    );
+  });
+});
+
 describe("sanitizeHistory", () => {
   it("keeps the last 8 valid turns and trims text", () => {
     const history = Array.from({ length: 12 }, (_, i) => ({
