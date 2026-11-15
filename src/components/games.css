@@ -15,7 +15,7 @@
   padding: 28px 24px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: #fff;
+  background: var(--surface);
   text-align: center;
 }
 .games-tabs,
@@ -25,7 +25,7 @@
   padding: 4px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
 }
 .games-lang {
   margin-bottom: 12px;
@@ -37,25 +37,25 @@
   border: 0;
   border-radius: 9px;
   background: transparent;
-  color: #44556a;
+  color: var(--text-soft);
   font-size: 14px;
   font-weight: 700;
 }
 .games-tabs button.on,
 .games-lang button.on {
   background: var(--navy);
-  color: #fff;
+  color: var(--on-primary);
 }
 .games-card {
   margin-top: 14px;
   padding: 20px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: #fff;
+  background: var(--surface);
 }
 .games-ask {
   margin: 0 0 12px;
-  color: #44556a;
+  color: var(--text-soft);
   font-size: 15px;
 }
 .games-cols {
@@ -77,7 +77,7 @@
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
   color: var(--navy);
   font-size: 16px;
   font-weight: 600;
@@ -88,12 +88,12 @@
 }
 .games-tile.ok {
   border-color: var(--green);
-  background: #eaf7f3;
+  background: var(--success-bg);
   opacity: 0.85;
 }
 .games-tile.bad {
   border-color: var(--orange);
-  background: #fff3ea;
+  background: var(--warn-bg);
 }
 .games-line {
   min-height: 64px;
@@ -107,14 +107,14 @@
 }
 .games-line.right {
   border: 1px solid var(--green);
-  background: #eaf7f3;
+  background: var(--success-bg);
 }
 .games-line.wrong {
   border: 1px solid var(--orange);
-  background: #fff3ea;
+  background: var(--warn-bg);
 }
 .games-empty {
-  color: #5a6b80;
+  color: var(--text-muted);
   font-weight: 500;
 }
 .games-chips {
@@ -129,7 +129,7 @@
 .games-status {
   min-height: 24px;
   margin: 12px 0 0;
-  color: #44556a;
+  color: var(--text-soft);
   font-size: 14px;
 }
 .games-actions {
@@ -154,10 +154,10 @@
 .games-primary {
   background: var(--blue-strong);
   border-color: var(--blue-strong);
-  color: #fff;
+  color: var(--on-primary);
 }
 .games-secondary {
-  background: #fff;
+  background: var(--surface);
   color: var(--navy);
   border-color: var(--line);
 }
@@ -166,7 +166,7 @@
   align-items: center;
   gap: 6px;
   margin: 12px 0 0;
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 13px;
 }
 @media (max-width: 480px) {

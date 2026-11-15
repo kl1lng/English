@@ -8,7 +8,7 @@
   padding: 16px 18px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--surface);
 }
 .ach-level {
   display: flex;
@@ -24,7 +24,7 @@
   height: 44px;
   border-radius: 14px;
   background: var(--navy);
-  color: #fff;
+  color: var(--on-primary);
   font-size: 20px;
   font-weight: 800;
 }
@@ -47,7 +47,7 @@
 .ach-level-text small,
 .ach-goal small {
   display: block;
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 13px;
   line-height: 1.4;
 }
@@ -68,14 +68,14 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  color: #2f7f6a;
+  color: var(--success-strong);
 }
 .ach-link {
   min-height: 44px;
   padding: 10px 14px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
+  background: var(--surface);
   color: var(--navy);
   font-size: 14px;
   font-weight: 700;
@@ -101,7 +101,7 @@
 }
 .ach-note {
   margin: 6px 0 0;
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 14px;
   line-height: 1.5;
 }
@@ -114,7 +114,7 @@
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--surface);
 }
 .ach-options {
   display: grid;
@@ -127,12 +127,12 @@
   padding: 10px 14px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
   color: var(--navy);
   text-align: left;
 }
 .ach-option small {
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 13px;
 }
 .ach-option.on {
@@ -170,7 +170,7 @@
   padding: 16px 18px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--surface);
   list-style: none;
 }
 .ach-skill b {
@@ -179,7 +179,7 @@
 }
 .ach-skill small {
   display: block;
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 13px;
 }
 .ach-badges {
@@ -198,9 +198,9 @@
   padding: 14px 10px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--surface);
   text-align: center;
-  color: #5a6b80;
+  color: var(--text-muted);
 }
 .ach-badge b {
   color: var(--navy);
@@ -217,14 +217,14 @@
   height: 44px;
   border-radius: 50%;
   background: var(--line);
-  color: #5a6b80;
+  color: var(--text-muted);
 }
 .ach-badge.earned {
   border-color: var(--green);
 }
 .ach-badge.earned .ach-badge-icon {
   background: var(--green);
-  color: #fff;
+  color: var(--on-primary);
 }
 .ach-sr {
   position: absolute;

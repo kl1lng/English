@@ -12,7 +12,7 @@
   padding: 28px 24px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: #fff;
+  background: var(--surface);
   text-align: center;
 }
 .dlg-page h1,
@@ -22,7 +22,7 @@
 }
 .dlg-note {
   margin: 0 0 16px;
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 15px;
   line-height: 1.5;
 }
@@ -43,7 +43,7 @@
   padding: 12px 16px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--surface);
   color: var(--navy);
   text-align: left;
 }
@@ -57,7 +57,7 @@
 }
 .dlg-scenario small {
   display: block;
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 13px;
   line-height: 1.4;
 }
@@ -74,7 +74,7 @@
   padding: 2px 8px;
   border-radius: 8px;
   background: var(--line);
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 700;
 }
@@ -84,7 +84,7 @@
   padding: 10px 16px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
+  background: var(--surface);
   color: var(--navy);
   font-size: 14px;
   font-weight: 700;
@@ -102,7 +102,7 @@
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
 }
 .dlg-msg {
   position: relative;
@@ -116,7 +116,7 @@
   line-height: 1.45;
 }
 .dlg-who {
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 700;
 }
@@ -127,7 +127,7 @@
 .dlg-user {
   justify-self: end;
   background: var(--navy);
-  color: #fff;
+  color: var(--on-primary);
 }
 .dlg-user .dlg-who {
   color: #d3dcea;
@@ -140,19 +140,19 @@
   margin-top: 4px;
   border: 1px solid var(--line);
   border-radius: 50%;
-  background: #fff;
+  background: var(--surface);
   color: var(--blue);
 }
 .dlg-status {
   margin: 0;
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 14px;
 }
 .dlg-error {
   margin: 12px 0 0;
   padding: 10px 14px;
   border-radius: 10px;
-  background: #fff3ea;
+  background: var(--warn-bg);
   color: #7a3a0c;
   font-size: 14px;
 }
@@ -166,7 +166,7 @@
   align-items: center;
   gap: 6px;
   margin: 0;
-  color: #44556a;
+  color: var(--text-soft);
   font-size: 14px;
 }
 .dlg-consent {
@@ -192,7 +192,7 @@
   border: 0;
   border-radius: 14px;
   background: var(--blue-strong);
-  color: #fff;
+  color: var(--on-primary);
   font-size: 16px;
   font-weight: 700;
 }
@@ -206,7 +206,7 @@
 }
 .dlg-count {
   margin: 0;
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 13px;
   text-align: center;
 }
@@ -215,7 +215,7 @@
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
 }
 .dlg-summary h2 {
   margin: 0 0 6px;
@@ -231,7 +231,7 @@
   line-height: 1.6;
 }
 .dlg-summary del {
-  color: #9a4b12;
+  color: var(--warn-text);
 }
 .dlg-actions {
   display: flex;

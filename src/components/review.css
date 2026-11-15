@@ -7,7 +7,7 @@
   padding: 14px 18px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
+  background: var(--surface);
 }
 .review-banner b {
   display: block;
@@ -15,7 +15,7 @@
   font-size: 15px;
 }
 .review-banner small {
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 13px;
 }
 .review-banner > div {
@@ -50,10 +50,10 @@
 .review-primary {
   background: var(--blue-strong);
   border-color: var(--blue-strong);
-  color: #fff;
+  color: var(--on-primary);
 }
 .review-secondary {
-  background: #fff;
+  background: var(--surface);
   color: var(--navy);
   border-color: var(--line);
 }
@@ -71,7 +71,7 @@
   padding: 28px 24px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: #fff;
+  background: var(--surface);
   text-align: center;
   color: var(--navy);
 }
@@ -91,15 +91,15 @@
 .review-empty p,
 .review-note {
   margin: 0;
-  color: #4a5b70;
+  color: var(--text-soft);
   font-size: 15px;
 }
 .review-meta {
-  color: #5a6b80 !important;
+  color: var(--text-muted) !important;
   font-size: 13px !important;
 }
 .review-warn {
-  color: #9a4b12 !important;
+  color: var(--warn-text) !important;
 }
 .review-actions {
   display: flex;
@@ -121,7 +121,7 @@
 }
 .review-count {
   margin: 10px 0 18px;
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 13px;
 }
 .review-word {
@@ -156,7 +156,7 @@
   background: var(--light-blue);
 }
 .review-answer dt {
-  color: #5a6b80;
+  color: var(--text-muted);
   font-size: 12px;
 }
 .review-answer dd {
@@ -166,13 +166,13 @@
 }
 .review-example {
   margin: 8px 0 16px;
-  color: #4a5b70;
+  color: var(--text-soft);
   font-size: 15px;
   font-style: italic;
 }
 .review-ask {
   margin: 0 0 10px;
-  color: #4a5b70;
+  color: var(--text-soft);
   font-size: 14px;
 }
 .review-sentence {
@@ -193,13 +193,13 @@
   padding: 8px 4px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
   color: var(--navy);
   font-size: 14px;
   font-weight: 700;
 }
 .review-rate small {
-  color: #5a6b80;
+  color: var(--text-muted);
   font-weight: 500;
 }
 .review-rate-1 {
@@ -224,18 +224,18 @@
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
   color: var(--navy);
   font-size: 16px;
   font-weight: 600;
 }
 .review-choice.right {
   border-color: var(--green);
-  background: #eaf7f3;
+  background: var(--success-bg);
 }
 .review-choice.wrong {
   border-color: var(--orange);
-  background: #fff3ea;
+  background: var(--warn-bg);
 }
 @media (max-width: 480px) {
   .review-card h1 {
