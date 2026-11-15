@@ -1,4 +1,5 @@
 import React from "react";
+import { formatWeekly } from "../lib/weekly.js";
 import { MISTAKE_TAG_LABELS } from "../data/mistake-tags.js";
 import {
   ArrowRight,
@@ -35,6 +36,7 @@ export default function Dashboard({
   reviewsToday,
   focus = null,
   startFocus = () => {},
+  weekly = null,
 }) {
   const todayAttempt = (user.submissions || [])
     .filter((submission) => submission.day === localDateKey())
@@ -91,6 +93,17 @@ export default function Dashboard({
         reviewsToday={reviewsToday}
         navigate={navigate}
       />
+      {weekly && (
+        <section className="week-card" aria-label="This week">
+          <small>This week</small>
+          <p>{formatWeekly(weekly)}</p>
+          <div className="week-days" aria-hidden="true">
+            {Array.from({ length: 7 }, (_, i) => (
+              <span key={i} className={weekly.dayFlags?.[i] ? "on" : ""} />
+            ))}
+          </div>
+        </section>
+      )}
       {focus && (
         <section className="focus-card" aria-label="Today’s focus">
           <div>

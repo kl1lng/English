@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
+import { formatWeekly, weeklySummary } from "../src/lib/weekly.js";
 
 // Helpers for Telegram reminders. The bot token, webhook secret and the Supabase service
 // key come only from environment variables on the server.
@@ -56,4 +57,21 @@ export async function sendTelegram(chatId, text) {
     body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
   });
   return { ok: response.ok, status: response.status };
+}
+
+// What to send today (or null). Sunday: the weekly summary for everyone linked. Other days: the
+// reminder, only for those who have not practised. Never twice in a day.
+export function messageFor({ link, practisedToday, today, profile = {} }) {
+  if (!link?.chat_id || link.last_sent_on === today) return null;
+  const isSunday = new Date(`${today}T12:00:00Z`).getUTCDay() === 0;
+  if (isSunday) {
+    const summary = weeklySummary({
+      today,
+      days: profile.days || [],
+      submissions: profile.submissions || [],
+      streak: profile.streak || 0,
+    });
+    return formatWeekly(summary);
+  }
+  return practisedToday ? null : reminderText({ streak: profile.streak || 0 });
 }

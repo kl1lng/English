@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chatIdOf, parseStart, reminderText, secretMatches, shouldRemind } from "./telegram.js";
+import { chatIdOf, messageFor, parseStart, reminderText, secretMatches, shouldRemind } from "./telegram.js";
 
 const update = (text, chat = { id: 12345, type: "private" }) => ({ message: { text, chat } });
 
@@ -44,5 +44,22 @@ describe("reminders", () => {
     expect(shouldRemind({ link: { chat_id: 1, last_sent_on: today }, practisedToday: false, today })).toBe(false);
     expect(shouldRemind({ link: { chat_id: 1, last_sent_on: null }, practisedToday: true, today })).toBe(false);
     expect(shouldRemind({ link: { chat_id: null }, practisedToday: false, today })).toBe(false);
+  });
+});
+
+describe("messageFor", () => {
+  const link = { chat_id: 1, last_sent_on: null };
+  const profile = { days: ["2026-11-10", "2026-11-14"], submissions: [], streak: 2 };
+  it("sends the weekly summary on Sunday, even to someone who practised", () => {
+    const text = messageFor({ link, practisedToday: true, today: "2026-11-15", profile });
+    expect(text).toMatch(/practised on 2 days/);
+  });
+  it("sends the daily reminder on other days, only to those who have not practised", () => {
+    expect(messageFor({ link, practisedToday: false, today: "2026-11-12", profile })).toMatch(/streak|few minutes/i);
+    expect(messageFor({ link, practisedToday: true, today: "2026-11-12", profile })).toBeNull();
+  });
+  it("sends nothing twice in a day or to unlinked learners", () => {
+    expect(messageFor({ link: { chat_id: 1, last_sent_on: "2026-11-15" }, practisedToday: false, today: "2026-11-15", profile })).toBeNull();
+    expect(messageFor({ link: { chat_id: null }, practisedToday: false, today: "2026-11-15", profile })).toBeNull();
   });
 });

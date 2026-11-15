@@ -52,6 +52,18 @@ describe("pages render without a browser", () => {
     expect(without).not.toContain("Today’s focus");
   });
 
+  it("Dashboard shows the weekly summary when given", () => {
+    const props = {
+      user: fallbackUser, completedCount: 6, progress: 20, openLesson: noop, navigate: noop, setModal: noop,
+      setAuthMode: noop, token: "", lessons, deck, gam, reviewsToday: 0,
+    };
+    const weekly = { range: { start: "2026-11-09", end: "2026-11-15" }, activeDays: 4, lessons: 3, reviews: 25, conversations: 1, streak: 5, topTag: null };
+    const html = renderToString(<Dashboard {...props} weekly={weekly} />).replace(/<!-- -->/g, "");
+    expect(html).toContain("This week");
+    expect(html).toContain("practised on 4 days");
+    expect(renderToString(<Dashboard {...props} />)).not.toContain("This week");
+  });
+
   it("Journey lists the lessons", () => {
     const html = renderToString(
       <Journey

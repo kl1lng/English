@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { awardFor } from "../lib/xp.js";
 import { dayKey } from "../lib/time.js";
+import { weekRange } from "../lib/weekly.js";
 
 const demoKey = "speakkaz:stats:demo";
 
@@ -128,6 +129,16 @@ export function useGamification({ supabase, userId }) {
             (s.extra.listenCorrect || 0) +
             (event.type === "review" && event.mode === "listen" && event.rating >= 3 ? 1 : 0),
           gamesTotal: (s.extra.gamesTotal || 0) + (event.type === "game" ? 1 : 0),
+          weeks:
+            event.type === "dialogue"
+              ? (() => {
+                  const start = weekRange(today).start;
+                  const weeks = { ...(s.extra.weeks || {}) };
+                  weeks[start] = { dialogues: (weeks[start]?.dialogues || 0) + 1 };
+                  const keep = Object.keys(weeks).sort().slice(-12);
+                  return Object.fromEntries(keep.map((k) => [k, weeks[k]]));
+                })()
+              : s.extra.weeks || {},
         },
       };
     });

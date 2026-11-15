@@ -1,5 +1,5 @@
 import { dayKey } from "../src/lib/time.js";
-import { reminderText, secretMatches, sendTelegram, serviceClient, shouldRemind } from "../server/telegram.js";
+import { messageFor, secretMatches, sendTelegram, serviceClient } from "../server/telegram.js";
 
 // Daily reminder job (Vercel Cron). Vercel sends "Authorization: Bearer <CRON_SECRET>".
 export default async function handler(request, response) {
@@ -26,10 +26,11 @@ export default async function handler(request, response) {
         .select("data")
         .eq("id", link.user_id)
         .maybeSingle();
-      const days = profile?.data?.days || [];
-      const practisedToday = days.includes(today);
-      if (!shouldRemind({ link, practisedToday, today })) continue;
-      const result = await sendTelegram(link.chat_id, reminderText({ streak: profile?.data?.streak || 0 }));
+      const data = profile?.data || {};
+      const practisedToday = (data.days || []).includes(today);
+      const text = messageFor({ link, practisedToday, today, profile: data });
+      if (!text) continue;
+      const result = await sendTelegram(link.chat_id, text);
       if (result.ok) {
         sent += 1;
         await supabase.from("telegram_links").update({ last_sent_on: today }).eq("user_id", link.user_id);

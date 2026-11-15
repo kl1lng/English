@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { weekRange, weeklySummary } from "./lib/weekly.js";
 import { recommendFocus } from "./lib/focus.js";
 import { useMistakes } from "./hooks/useMistakes.js";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
@@ -162,6 +163,22 @@ export default function App() {
   const gam = useGamification({ supabase, userId: session?.user?.id || null });
   const telegram = useTelegramLink({ supabase, userId: session?.user?.id || null });
   const reviewsToday = normalizeDaily(gam.stats.extra.daily, localDateKey()).reviews;
+  const weekly = useMemo(() => {
+    const today = localDateKey();
+    const range = weekRange(today);
+    const reviewed = deck.rows.filter(
+      (r) => r.last_review && dayKey(new Date(r.last_review)) >= range.start && dayKey(new Date(r.last_review)) <= range.end,
+    ).length;
+    return weeklySummary({
+      today,
+      days: user.days || [],
+      submissions: user.submissions || [],
+      reviews: reviewed,
+      conversations: gam.stats.extra.weeks?.[range.start]?.dialogues ?? 0,
+      streak: user.streak || 0,
+      topTag: mistakes.stats[0]?.tag ?? null,
+    });
+  }, [user, deck.rows, gam.stats.extra.weeks, mistakes.stats]);
   const deckWithXp = useMemo(
     () => ({
       ...deck,
@@ -756,6 +773,7 @@ export default function App() {
                 gam,
                 reviewsToday,
                 focus: recommendFocus(mistakes.stats, completedIndexes, lessons),
+                weekly,
                 startFocus: (tag) => {
                   setDialogueFocus(tag);
                   navigate("dialogue");
