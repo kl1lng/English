@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useMistakes } from "./hooks/useMistakes.js";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import OfflineBanner from "./components/OfflineBanner.jsx";
 import { useOnline } from "./hooks/useOnline.js";
@@ -155,6 +156,7 @@ export default function App() {
     completedIndexes,
   });
   const online = useOnline();
+  const mistakes = useMistakes({ supabase, userId: session?.user?.id || null });
   const gam = useGamification({ supabase, userId: session?.user?.id || null });
   const telegram = useTelegramLink({ supabase, userId: session?.user?.id || null });
   const reviewsToday = normalizeDaily(gam.stats.extra.daily, localDateKey()).reviews;
@@ -376,6 +378,7 @@ export default function App() {
             lessons[selected].minimumDurationSeconds,
       ) && seconds >= lessons[selected].minimumDurationSeconds;
     gam.award({ type: firstForCard ? "lesson_first" : "lesson_retry" });
+    mistakes.add(processedFeedback?.feedback?.grammarCorrections, "lesson", selected);
     setUser((old) => {
       const currentDay = localDateKey();
       const previousSubmissions = old.submissions || [];
@@ -511,6 +514,7 @@ export default function App() {
   // A finished conversation earns XP; only the review (never the text) is stored.
   function saveDialogue({ scenarioId, turns, summary }) {
     gam.award({ type: "dialogue" });
+    mistakes.add(summary?.corrections, "dialogue");
     if (!supabase || !session) return;
     supabase
       .from("dialogue_sessions")
