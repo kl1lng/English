@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { usePwa } from "./hooks/usePwa.js";
 import { weekRange, weeklyStreak, weeklySummary } from "./lib/weekly.js";
 import { recommendFocus } from "./lib/focus.js";
 import { useMistakes } from "./hooks/useMistakes.js";
@@ -158,6 +159,7 @@ export default function App() {
     completedIndexes,
   });
   const online = useOnline();
+  const pwa = usePwa();
   const [dialogueFocus, setDialogueFocus] = useState(null);
   const mistakes = useMistakes({ supabase, userId: session?.user?.id || null });
   const gam = useGamification({ supabase, userId: session?.user?.id || null });
@@ -694,6 +696,11 @@ export default function App() {
           </span>
           <ChevronRight size={15} />
         </button>
+        {pwa.canInstall && (
+          <button className="install-btn" onClick={pwa.install}>
+            Install the app
+          </button>
+        )}
         <ThemeToggle />
         <div className="profile-mini">
           <div className="avatar">{user.name.slice(0, 1).toUpperCase()}</div>
@@ -757,6 +764,14 @@ export default function App() {
         </header>
         <div className="page-content">
           <OfflineBanner online={online} />
+          {pwa.updateReady && (
+            <div className="offline-banner" role="status">
+              <span>A new version is ready.</span>
+              <button className="update-btn" onClick={pwa.applyUpdate}>
+                Reload
+              </button>
+            </div>
+          )}
           <ErrorBoundary key={page}>
           {page === "home" && (
             <Dashboard

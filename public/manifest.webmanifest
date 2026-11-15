@@ -1,0 +1,14 @@
+{
+  "name": "Discover Kazakhstan — 30-Day Speaking Booster",
+  "short_name": "speakkaz",
+  "description": "A short English speaking practice every day, with Kazakhstan as the topic.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f8fc",
+  "theme_color": "#152a41",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
