@@ -1,4 +1,4 @@
-import { lessons as kazakhstan } from "./lessons/kazakhstan-30.js";
+import { lessons as kazakhstan } from "./lessons.js";
 
 // A course is an ordered list of lessons. Lesson ids are unique across courses, so a learner's
 // attempts (which store cardId) can be matched to the right course.
