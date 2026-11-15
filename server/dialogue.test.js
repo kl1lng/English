@@ -75,13 +75,13 @@ describe("summary", () => {
     const text = JSON.stringify({
       strengths: ["Good details."],
       corrections: [
-        { original: "I goed there", corrected: "I went there" },
+        { original: "I goed there", corrected: "I went there", tag: "Tenses" },
         { original: "invented words", corrected: "x" },
       ],
       phrases: ["It is famous for", "One reason is", "I would recommend", "extra"],
     });
     const s = parseSummary(text, ["Yesterday I goed there with friends"]);
-    expect(s.corrections).toEqual([{ original: "I goed there", corrected: "I went there" }]);
+    expect(s.corrections).toEqual([{ original: "I goed there", corrected: "I went there", tag: "tenses" }]);
     expect(s.phrases.length).toBe(3);
   });
 });

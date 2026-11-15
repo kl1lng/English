@@ -70,7 +70,7 @@ describe("POST /api/dialogue-summary", () => {
     const res = fakeResponse();
     await summaryHandler({ method: "POST", headers: {}, body }, res);
     expect(res.statusCode).toBe(200);
-    expect(res.body.corrections).toEqual([{ original: "I goed there", corrected: "I went there" }]);
+    expect(res.body.corrections).toEqual([{ original: "I goed there", corrected: "I went there", tag: "other" }]);
     expect(res.body.phrases.length).toBe(3);
   });
 
