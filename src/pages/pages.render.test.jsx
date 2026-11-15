@@ -39,6 +39,19 @@ describe("pages render without a browser", () => {
     expect(html).toContain("--p:0");
   });
 
+  it("Dashboard shows today's focus only when there is one", () => {
+    const props = {
+      user: fallbackUser, completedCount: 6, progress: 20, openLesson: noop, navigate: noop, setModal: noop,
+      setAuthMode: noop, token: "", lessons, deck, gam, reviewsToday: 0, startFocus: noop,
+    };
+    const withFocus = renderToString(<Dashboard {...props} focus={{ tag: "tenses", count: 4, lessonIndexes: [1] }} />).replace(/<!-- -->/g, "");
+    expect(withFocus).toContain("Today’s focus");
+    expect(withFocus).toContain("Verb tenses");
+    expect(withFocus).toContain("4 mistakes");
+    const without = renderToString(<Dashboard {...props} focus={null} />);
+    expect(without).not.toContain("Today’s focus");
+  });
+
   it("Journey lists the lessons", () => {
     const html = renderToString(
       <Journey

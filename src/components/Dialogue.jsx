@@ -29,6 +29,7 @@ export default function Dialogue({
   navigate,
   onAddPhrases,
   canAddPhrases,
+  focusTag = null,
 }) {
   const [added, setAdded] = useState(null);
   const [scenario, setScenario] = useState(null);
@@ -115,6 +116,7 @@ export default function Dialogue({
     body.append("turn", String(turn));
     body.append("duration", String(Math.min(duration, MAX_SECONDS)));
     body.append("aiConsent", "true");
+    if (focusTag) body.append("focusTag", focusTag);
     body.append("history", JSON.stringify(messages.map(({ role, text }) => ({ role, text }))));
     try {
       const res = await fetch("/api/dialogue", { method: "POST", headers: authHeaders(token), body });

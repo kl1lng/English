@@ -70,6 +70,19 @@ describe("prompts", () => {
   });
 });
 
+describe("focus tag", () => {
+  const s = scenarios[0];
+  it("adds the learner's weak spot to the partner's instructions", () => {
+    const msgs = buildTurnMessages(s, [], "hello", 1, "tenses");
+    expect(msgs[0].content).toContain("Verb tenses");
+  });
+  it("ignores unknown or missing tags", () => {
+    expect(buildTurnMessages(s, [], "hello", 1, "bogus")[0].content).not.toContain("often struggles");
+    expect(buildTurnMessages(s, [], "hello", 1)[0].content).not.toContain("often struggles");
+    expect(buildTurnMessages(s, [], "hello", 1, "other")[0].content).not.toContain("often struggles");
+  });
+});
+
 describe("summary", () => {
   it("keeps only corrections that quote the learner", () => {
     const text = JSON.stringify({

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { recommendFocus } from "./lib/focus.js";
 import { useMistakes } from "./hooks/useMistakes.js";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import OfflineBanner from "./components/OfflineBanner.jsx";
@@ -156,6 +157,7 @@ export default function App() {
     completedIndexes,
   });
   const online = useOnline();
+  const [dialogueFocus, setDialogueFocus] = useState(null);
   const mistakes = useMistakes({ supabase, userId: session?.user?.id || null });
   const gam = useGamification({ supabase, userId: session?.user?.id || null });
   const telegram = useTelegramLink({ supabase, userId: session?.user?.id || null });
@@ -753,6 +755,11 @@ export default function App() {
                 deck,
                 gam,
                 reviewsToday,
+                focus: recommendFocus(mistakes.stats, completedIndexes, lessons),
+                startFocus: (tag) => {
+                  setDialogueFocus(tag);
+                  navigate("dialogue");
+                },
               }}
             />
           )}
@@ -783,6 +790,7 @@ export default function App() {
             <Dialogue
               {...{ token, aiAvailable, completedCount, navigate }}
               onFinished={saveDialogue}
+              focusTag={dialogueFocus}
               onAddPhrases={deck.addCustom}
               canAddPhrases={deck.canAddCustom && deck.status === "ready"}
             />

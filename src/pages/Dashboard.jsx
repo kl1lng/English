@@ -1,4 +1,5 @@
 import React from "react";
+import { MISTAKE_TAG_LABELS } from "../data/mistake-tags.js";
 import {
   ArrowRight,
   Award,
@@ -32,6 +33,8 @@ export default function Dashboard({
   deck,
   gam,
   reviewsToday,
+  focus = null,
+  startFocus = () => {},
 }) {
   const todayAttempt = (user.submissions || [])
     .filter((submission) => submission.day === localDateKey())
@@ -88,6 +91,28 @@ export default function Dashboard({
         reviewsToday={reviewsToday}
         navigate={navigate}
       />
+      {focus && (
+        <section className="focus-card" aria-label="Today’s focus">
+          <div>
+            <small>Today’s focus</small>
+            <b>{MISTAKE_TAG_LABELS[focus.tag]}</b>
+            <span>
+              {focus.count} mistakes of this kind in the last 30 days. A short conversation is a good way to
+              practise.
+            </span>
+          </div>
+          <div className="focus-actions">
+            <button className="focus-primary" onClick={() => startFocus(focus.tag)}>
+              Practise in a conversation
+            </button>
+            {focus.lessonIndexes.length > 0 && (
+              <button className="focus-secondary" onClick={() => openLesson(focus.lessonIndexes[0])}>
+                Repeat lesson {focus.lessonIndexes[0] + 1}
+              </button>
+            )}
+          </div>
+        </section>
+      )}
       <ReviewDeckSummary
         rows={deck.rows}
         status={deck.status}

@@ -1,5 +1,6 @@
 import multer from "multer";
 import { scenarioById } from "../src/data/scenarios.js";
+import { MISTAKE_TAGS } from "../src/data/mistake-tags.js";
 import { getRequestUser } from "../server/auth.js";
 import { requestFeedbackText, transcribeAudio } from "../server/cloudflare-ai.js";
 import {
@@ -59,6 +60,7 @@ export default async function handler(request, response) {
   if (!Number.isFinite(duration) || duration < 1 || duration > MAX_RECORDING_SECONDS)
     return response.status(400).json({ error: "The recording must be between 1 and 45 seconds." });
 
+  const focusTag = MISTAKE_TAGS.includes(request.body?.focusTag) ? request.body.focusTag : undefined;
   let history = [];
   try {
     history = sanitizeHistory(JSON.parse(String(request.body?.history || "[]")));
@@ -77,7 +79,7 @@ export default async function handler(request, response) {
   try {
     const transcript = await transcribeAudio(request.file.buffer);
     const text = await requestFeedbackText(
-      buildTurnMessages(scenario, history, transcript, turn),
+      buildTurnMessages(scenario, history, transcript, turn, focusTag),
       { maxTokens: 600 },
     );
     const reply = parseTurnReply(text, { forceEnd: turn >= MAX_SESSION_TURNS });
