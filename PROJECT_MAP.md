@@ -96,7 +96,7 @@ New variables for the engagement features (names only): `DAILY_FEEDBACK_LIMIT`, 
 - Custom phrases from the speaking-partner review can be added to the word deck (migration 006); they are flip cards only.
 - Streak counts are computed on the client; XP and badges can be edited by the learner. A shared leaderboard would need server-side awarding.
 - Legacy Express auth and submissions code can be removed.
-- Words in the Drive folder "Озвучка 2" that are not in any lesson never appear in the app (for example `crystal-clear`, `symbolise`).
+- Drive folder "Озвучка 2" was compared with `public/audio/` on 2026-11-15: both hold the same 181 recordings; differences are only file-name cleanup (trailing dots, one odd character in "crystal clear") and `-2`/`-3` suffixes for repeated takes. No word is missing from the lessons, and 14 words now map to recordings saved under other names (`src/lib/audio.js`).
 - Kazakh (`kk`) translations in `src/lessons.js` have not been reviewed by a native speaker.
 - Real speech feedback on the live site has not been tested end to end after the Vercel variables were added.
 - `doc_extract.txt`, `POWERSHELL_GUIDE.txt` and `archive/` are notes and old versions, not part of the app.
