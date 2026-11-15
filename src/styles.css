@@ -85,7 +85,7 @@ select:focus-visible {
 }
 .side-label {
   padding: 0 12px;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 1.2px;
   color: var(--muted);
@@ -124,7 +124,7 @@ select:focus-visible {
 .nav-badge {
   margin-left: auto;
   color: var(--muted);
-  font-size: 10px;
+  font-size: var(--fs-xs);
 }
 .journey-label {
   margin-top: 34px;
@@ -150,7 +150,7 @@ select:focus-visible {
   align-items: center;
   gap: 8px;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: var(--fs-xs);
   font-weight: 600;
 }
 .tiny-ring {
@@ -186,7 +186,7 @@ select:focus-visible {
 .journey-caption {
   margin-left: 32px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: var(--fs-xs);
 }
 .sidebar-spacer {
   flex: 1;
@@ -221,11 +221,11 @@ select:focus-visible {
   display: block;
 }
 .help-card b {
-  font-size: 10px;
+  font-size: var(--fs-xs);
   color: var(--text-soft);
 }
 .help-card small {
-  font-size: 9px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin-top: 3px;
 }
@@ -260,11 +260,11 @@ select:focus-visible {
   text-overflow: ellipsis;
 }
 .profile-mini-text b {
-  font-size: 11px;
+  font-size: var(--fs-xs);
   color: var(--text);
 }
 .profile-mini-text small {
-  font-size: 9px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin-top: 3px;
 }
@@ -306,7 +306,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 11px;
+  font-size: var(--fs-xs);
   color: var(--muted);
 }
 .crumb b {
@@ -320,7 +320,7 @@ select:focus-visible {
   gap: 13px;
 }
 .today-pill {
-  font-size: 9px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.7px;
   font-weight: 800;
   color: var(--muted);
@@ -351,11 +351,11 @@ select:focus-visible {
   color: #f19a63;
   border-radius: 20px;
   padding: 7px 10px;
-  font-size: 11px;
+  font-size: var(--fs-xs);
   font-weight: 800;
 }
 .streak-pill span {
-  font-size: 9px;
+  font-size: var(--fs-xs);
   color: #a48e81;
   font-weight: 600;
 }
@@ -364,7 +364,7 @@ select:focus-visible {
   box-shadow: 0 0 0 1px #eee6df;
   width: 31px;
   height: 31px;
-  font-size: 11px;
+  font-size: var(--fs-xs);
 }
 .menu-toggle {
   display: none;
@@ -384,7 +384,7 @@ select:focus-visible {
   margin-bottom: 21px;
 }
 .date-line {
-  font-size: 9px;
+  font-size: var(--fs-xs);
   letter-spacing: 1px;
   font-weight: 800;
   color: var(--muted);
@@ -416,7 +416,7 @@ select:focus-visible {
 }
 .welcome-row p {
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--fs-xs);
   margin: 0;
 }
 .wave-hand {
@@ -431,7 +431,7 @@ select:focus-visible {
   background: var(--surface);
   padding: 8px 10px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: var(--fs-xs);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -473,7 +473,7 @@ select:focus-visible {
   align-items: center;
   gap: 6px;
   color: #d2dfed;
-  font-size: 8px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 1px;
 }
@@ -493,7 +493,7 @@ select:focus-visible {
   color: #ffd3a7;
 }
 .hero-content p {
-  font-size: 10px;
+  font-size: var(--fs-xs);
   line-height: 1.65;
   color: #e0e8ee;
   margin: 0;
@@ -505,7 +505,7 @@ select:focus-visible {
   border: 0;
   background: var(--accent);
   color: var(--on-accent);
-  font-size: 10px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   padding: 5px 6px 5px 12px;
   border-radius: 7px;
@@ -530,7 +530,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 8px;
+  font-size: var(--fs-xs);
   color: #d5e0e9;
 }
 .hero-count b {
@@ -550,7 +550,7 @@ select:focus-visible {
   color: var(--on-primary);
   display: grid;
   place-items: center;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   margin-left: -3px;
 }
 .tiny-avatars i:nth-child(2) {
@@ -573,7 +573,7 @@ select:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 3px;
-  font-size: 6px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.9px;
   font-weight: 800;
   text-align: center;
@@ -591,7 +591,7 @@ select:focus-visible {
   position: absolute;
   bottom: 14px;
   right: 17px;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 1px;
   color: #ffffffc0;
@@ -638,7 +638,7 @@ select:focus-visible {
 .stat-tile small {
   color: var(--muted);
   letter-spacing: 0.65px;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   font-weight: 800;
 }
 .tile-number {
@@ -656,10 +656,10 @@ select:focus-visible {
   color: var(--muted);
 }
 .tile-number .tile-denom {
-  font-size: 10px;
+  font-size: var(--fs-xs);
 }
 .tile-foot {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin-top: 5px;
 }
@@ -704,7 +704,7 @@ select:focus-visible {
   stroke-linecap: round;
 }
 .tile-mini-progress span {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   color: #6d63a5;
 }
@@ -724,7 +724,7 @@ select:focus-visible {
   margin-bottom: 11px;
 }
 .section-kicker {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   letter-spacing: 1.05px;
   color: var(--muted);
   font-weight: 800;
@@ -749,7 +749,7 @@ select:focus-visible {
   border: 0;
   background: transparent;
   color: #6b94ce;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   white-space: nowrap;
 }
@@ -791,14 +791,14 @@ select:focus-visible {
   color: #4e78a9;
   border-radius: 5px;
   padding: 5px 7px;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 0.7px;
 }
 .image-place {
   bottom: 11px;
   left: 12px;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   text-shadow: 0 1px 5px #25364a;
 }
@@ -817,7 +817,7 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 8px;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 .level-tag {
@@ -842,7 +842,7 @@ select:focus-visible {
 }
 .lesson-detail > p {
   color: var(--muted);
-  font-size: 9px;
+  font-size: var(--fs-xs);
   line-height: 1.55;
   margin: 0;
   max-width: 420px;
@@ -859,7 +859,7 @@ select:focus-visible {
   align-items: center;
   gap: 7px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
 }
 .lesson-skills span {
   display: flex;
@@ -879,7 +879,7 @@ select:focus-visible {
   border-radius: 6px;
   padding: 7px 9px;
   color: #598bd0;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -953,7 +953,7 @@ select:focus-visible {
   padding-right: 21px;
 }
 .place-caption small {
-  font-size: 7px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.5px;
   color: var(--muted);
   font-weight: 700;
@@ -1001,10 +1001,10 @@ select:focus-visible {
   display: block;
 }
 .save-progress-banner b {
-  font-size: 9px;
+  font-size: var(--fs-xs);
 }
 .save-progress-banner small {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin-top: 3px;
 }
@@ -1014,7 +1014,7 @@ select:focus-visible {
   justify-content: space-between;
   gap: 10px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   max-width: 1050px;
   width: 100%;
   margin: auto;
@@ -1025,7 +1025,7 @@ select:focus-visible {
 .footer > span:last-child {
   font-weight: 700;
   letter-spacing: 0.7px;
-  font-size: 7px;
+  font-size: var(--fs-xs);
 }
 .footer > span:last-child b {
   color: var(--muted);
@@ -1050,7 +1050,7 @@ select:focus-visible {
   justify-content: space-between;
 }
 .eyebrow {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   letter-spacing: 1px;
   color: var(--muted);
   font-weight: 800;
@@ -1090,11 +1090,11 @@ select:focus-visible {
 }
 .streak-unit {
   color: var(--muted);
-  font-size: 9px;
+  font-size: var(--fs-xs);
 }
 .best-streak {
   color: #c39b7f;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.45px;
   font-weight: 800;
   background: var(--warn-bg);
@@ -1102,7 +1102,7 @@ select:focus-visible {
   border-radius: 5px;
 }
 .streak-card > p {
-  font-size: 9px;
+  font-size: var(--fs-xs);
   color: #8f8e8d;
   line-height: 1.55;
   margin: 8px 0 10px;
@@ -1115,7 +1115,7 @@ select:focus-visible {
   display: grid;
   justify-items: center;
   gap: 4px;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   color: var(--muted);
 }
 .week-day i {
@@ -1162,12 +1162,12 @@ select:focus-visible {
   background: var(--warn-bg);
 }
 .stat-top .eyebrow {
-  font-size: 7px;
+  font-size: var(--fs-xs);
   flex: 1;
   letter-spacing: 0.65px;
 }
 .stat-more {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   color: var(--muted);
 }
 .stat-value {
@@ -1178,7 +1178,7 @@ select:focus-visible {
   margin: 7px 0;
 }
 .stat-value span {
-  font-size: 10px;
+  font-size: var(--fs-xs);
   font-weight: 500;
   color: var(--muted);
 }
@@ -1191,7 +1191,7 @@ select:focus-visible {
 .stat-note {
   display: block;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   margin-top: 7px;
 }
 .word-cloud {
@@ -1205,7 +1205,7 @@ select:focus-visible {
   border-radius: 5px;
   background: var(--surface-2);
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
 }
 .word-cloud span:nth-child(2) {
   background: var(--warn-bg);
@@ -1232,7 +1232,7 @@ select:focus-visible {
   align-items: center;
   gap: 6px;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: var(--fs-xs);
 }
 .nudge-top span {
   color: #eda666;
@@ -1290,11 +1290,11 @@ select:focus-visible {
   display: block;
 }
 .rail-help b {
-  font-size: 9px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
 }
 .rail-help small {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin-top: 3px;
 }
@@ -1321,7 +1321,7 @@ select:focus-visible {
   background: #416fa9;
   color: white;
   padding: 9px 13px;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   box-shadow: 0 5px 18px #2d537337;
 }
@@ -1380,11 +1380,11 @@ select:focus-visible {
   gap: 5px;
 }
 .chat-head b {
-  font-size: 10px;
+  font-size: var(--fs-xs);
   color: var(--text);
 }
 .chat-head small {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin-top: 4px;
 }
@@ -1398,7 +1398,7 @@ select:focus-visible {
   border-radius: 7px;
   background: var(--bg);
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   line-height: 1.5;
 }
 .chat-suggestion span {
@@ -1426,7 +1426,7 @@ select:focus-visible {
   max-width: 86%;
   border-radius: 10px;
   padding: 9px 10px;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   line-height: 1.55;
   white-space: pre-wrap;
 }
@@ -1457,7 +1457,7 @@ select:focus-visible {
   border-radius: 15px;
   padding: 5px 7px;
   color: var(--muted);
-  font-size: 7px;
+  font-size: var(--fs-xs);
 }
 .chat-input {
   display: flex;
@@ -1472,7 +1472,7 @@ select:focus-visible {
   background: var(--surface);
   padding: 8px;
   border-radius: 7px;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   color: var(--text);
 }
 .chat-input button {
@@ -1490,7 +1490,7 @@ select:focus-visible {
 .chat-foot {
   text-align: center;
   color: var(--muted);
-  font-size: 7px;
+  font-size: var(--fs-xs);
   padding: 0 0 8px;
 }
 .modal-backdrop {
@@ -1550,7 +1550,7 @@ select:focus-visible {
 }
 .auth-modal > p {
   color: var(--muted);
-  font-size: 10px;
+  font-size: var(--fs-xs);
   line-height: 1.5;
   margin: 0 0 17px;
 }
@@ -1568,7 +1568,7 @@ select:focus-visible {
   background: transparent;
   padding: 8px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 .auth-tabs button.selected {
@@ -1584,7 +1584,7 @@ select:focus-visible {
   display: grid;
   gap: 5px;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 .auth-modal input,
@@ -1593,7 +1593,7 @@ select:focus-visible {
   border: 1px solid var(--border);
   border-radius: 7px;
   padding: 10px 11px;
-  font-size: 10px;
+  font-size: var(--fs-xs);
   color: var(--text);
   background: var(--surface);
 }
@@ -1610,7 +1610,7 @@ select:focus-visible {
   padding: 8px;
   background: var(--warn-bg);
   color: #c26b50;
-  font-size: 9px;
+  font-size: var(--fs-xs);
 }
 .auth-submit {
   width: 100%;
@@ -1623,7 +1623,7 @@ select:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 10px;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 .auth-submit:disabled {
@@ -1635,13 +1635,13 @@ select:focus-visible {
   justify-content: center;
   gap: 5px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
 }
 .signout-btn {
   border: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 9px;
+  font-size: var(--fs-xs);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1699,7 +1699,7 @@ select:focus-visible {
   filter: drop-shadow(0 2px 4px #192a3b77);
 }
 .modal-hero .hero-kicker {
-  font-size: 7px;
+  font-size: var(--fs-xs);
   color: #e4edf4;
 }
 .modal-hero h3 {
@@ -1714,7 +1714,7 @@ select:focus-visible {
   align-items: center;
   gap: 5px;
   color: #e2eaf0;
-  font-size: 8px;
+  font-size: var(--fs-xs);
 }
 .lesson-modal-cols {
   display: grid;
@@ -1744,13 +1744,13 @@ select:focus-visible {
 .quick-fact b {
   display: block;
   color: #c28b50;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.8px;
 }
 .quick-fact p {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 9px;
+  font-size: var(--fs-xs);
   line-height: 1.45;
 }
 .modal-block {
@@ -1784,12 +1784,12 @@ select:focus-visible {
   background: #f1effb;
 }
 .modal-block-title b {
-  font-size: 9px;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
 }
 .soft-note {
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   margin-left: auto;
 }
 .task-list {
@@ -1804,7 +1804,7 @@ select:focus-visible {
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: var(--fs-xs);
 }
 .task-list i,
 .sentence-prompt i {
@@ -1816,7 +1816,7 @@ select:focus-visible {
   color: #e39b6d;
   display: grid;
   place-items: center;
-  font-size: 8px;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 .word-chips {
@@ -1831,7 +1831,7 @@ select:focus-visible {
   color: var(--muted);
   border-radius: 5px;
   padding: 5px 7px;
-  font-size: 8px;
+  font-size: var(--fs-xs);
   cursor: pointer;
 }
 .word-chip:hover,
@@ -1855,11 +1855,11 @@ select:focus-visible {
 }
 .vocab-detail b {
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: var(--fs-xs);
 }
 .vocab-detail span {
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
 }
 .word-sound {
   display: inline-flex;
@@ -1882,7 +1882,7 @@ select:focus-visible {
 .vocab-detail p {
   margin: 5px 0 0;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   line-height: 1.4;
 }
 .sentence-prompt .final-prompt {
@@ -1935,12 +1935,12 @@ select:focus-visible {
   background: var(--surface-2);
   color: var(--muted);
   padding: 5px 6px;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 0.4px;
 }
 .record-panel > p {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   line-height: 1.5;
   color: var(--muted);
   margin: 9px 0 8px;
@@ -2011,7 +2011,7 @@ select:focus-visible {
   color: #dc7774;
 }
 .record-hint {
-  font-size: 6.5px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.75px;
   color: var(--muted);
   font-weight: 800;
@@ -2019,12 +2019,12 @@ select:focus-visible {
 }
 .record-panel > .text-link {
   margin-top: 12px;
-  font-size: 8px;
+  font-size: var(--fs-xs);
 }
 .mic-error {
   margin-top: 7px;
   color: #c66d64;
-  font-size: 8px;
+  font-size: var(--fs-xs);
 }
 .audio-preview {
   display: flex;
@@ -2037,7 +2037,7 @@ select:focus-visible {
   border: 1px solid var(--border);
   border-radius: 7px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
 }
 .audio-preview audio {
   display: none;
@@ -2066,7 +2066,7 @@ select:focus-visible {
 }
 .transcript-preview > span,
 .example-line small {
-  font-size: 7px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.5px;
   color: var(--muted);
   font-weight: 800;
@@ -2074,7 +2074,7 @@ select:focus-visible {
 .transcript-preview p {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   line-height: 1.45;
 }
 .send-recording {
@@ -2085,7 +2085,7 @@ select:focus-visible {
   background: #5089d0;
   color: var(--on-primary);
   padding: 9px;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -2105,7 +2105,7 @@ select:focus-visible {
   margin-top: 9px;
 }
 .feedback-title {
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   color: #5c9278;
   display: flex;
@@ -2123,7 +2123,7 @@ select:focus-visible {
 }
 .feedback-box > p,
 .feedback-row {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   line-height: 1.5;
   color: var(--muted);
   margin: 6px 0;
@@ -2132,7 +2132,7 @@ select:focus-visible {
   display: block;
   margin-top: 5px;
   color: var(--muted);
-  font-size: 7px;
+  font-size: var(--fs-xs);
 }
 .feedback-strength {
   color: var(--text-muted) !important;
@@ -2154,11 +2154,11 @@ select:focus-visible {
 .feedback-metrics small,
 .feedback-metrics span {
   color: var(--muted);
-  font-size: 7px;
+  font-size: var(--fs-xs);
 }
 .feedback-metrics b {
   color: #527cae;
-  font-size: 9px;
+  font-size: var(--fs-xs);
 }
 .feedback-row b {
   display: block;
@@ -2177,20 +2177,20 @@ select:focus-visible {
 }
 .next-goal small {
   color: #c58a54;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 0.45px;
 }
 .next-goal p {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   line-height: 1.45;
 }
 .transcript-details {
   margin-top: 7px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
 }
 .transcript-details summary {
   cursor: pointer;
@@ -2212,7 +2212,7 @@ select:focus-visible {
   border-radius: 6px;
   color: #527fae;
   background: var(--surface);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   cursor: pointer;
 }
@@ -2220,7 +2220,7 @@ select:focus-visible {
   display: flex;
   gap: 6px;
   align-items: flex-start;
-  font-size: 8px;
+  font-size: var(--fs-xs);
   line-height: 1.4;
   color: var(--muted);
   margin-top: 5px;
@@ -2253,7 +2253,7 @@ select:focus-visible {
   padding: 4px 6px;
   border-radius: 5px;
   color: var(--muted);
-  font-size: 7px;
+  font-size: var(--fs-xs);
   text-transform: capitalize;
 }
 .score-pills b {
@@ -2262,7 +2262,7 @@ select:focus-visible {
 }
 .feedback-caveat {
   display: block;
-  font-size: 6px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin-top: 6px;
 }
@@ -2273,7 +2273,7 @@ select:focus-visible {
   justify-content: space-between;
   gap: 10px;
   color: var(--muted);
-  font-size: 7px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.5px;
 }
 .lesson-modal-bottom span {
@@ -2304,7 +2304,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: var(--fs-xs);
   animation: pop-in 0.2s;
 }
 .toast svg {
@@ -2316,7 +2316,7 @@ select:focus-visible {
   left: 257px;
   z-index: 10;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   display: flex;
   align-items: center;
   gap: 5px;
@@ -2345,7 +2345,7 @@ select:focus-visible {
 .journey-page-head p,
 .certificate-page > p {
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--fs-xs);
   margin: 0;
 }
 .journey-progress {
@@ -2371,7 +2371,7 @@ select:focus-visible {
   background: #6d9cde;
 }
 .journey-progress small {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   color: var(--muted);
 }
 .journey-banner {
@@ -2394,11 +2394,11 @@ select:focus-visible {
   display: block;
 }
 .journey-banner b {
-  font-size: 10px;
+  font-size: var(--fs-xs);
   color: var(--text-soft);
 }
 .journey-banner small {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin-top: 4px;
 }
@@ -2414,7 +2414,7 @@ select:focus-visible {
   align-items: center;
   margin: 21px 1px 10px;
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 0.7px;
 }
@@ -2422,7 +2422,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 8px;
+  font-size: var(--fs-xs);
   letter-spacing: 0;
   color: var(--muted);
   font-weight: 600;
@@ -2467,7 +2467,7 @@ select:focus-visible {
   align-items: center;
 }
 .day-card-top > span:first-child {
-  font-size: 7px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   font-weight: 800;
   letter-spacing: 0.5px;
@@ -2489,7 +2489,7 @@ select:focus-visible {
   background: var(--surface-2);
   color: #628dc3;
   padding: 0 5px;
-  font-size: 6px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.4px;
   font-weight: 800;
 }
@@ -2509,7 +2509,7 @@ select:focus-visible {
   min-height: 23px;
 }
 .day-card > small {
-  font-size: 7px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin-top: 3px;
   white-space: nowrap;
@@ -2523,7 +2523,7 @@ select:focus-visible {
   margin-top: auto;
   padding-top: 8px;
   color: var(--muted);
-  font-size: 7px;
+  font-size: var(--fs-xs);
 }
 .day-card-bottom span {
   display: flex;
@@ -2571,7 +2571,7 @@ select:focus-visible {
   max-width: 390px;
   margin: 0 auto;
   color: var(--muted);
-  font-size: 10px;
+  font-size: var(--fs-xs);
   line-height: 1.6;
 }
 .cert-locked > p b {
@@ -2586,7 +2586,7 @@ select:focus-visible {
   border: 0;
   background: transparent;
   color: #5486bf;
-  font-size: 10px;
+  font-size: var(--fs-xs);
   font-weight: 700;
   cursor: pointer;
 }
@@ -2648,7 +2648,7 @@ select:focus-visible {
   border-radius: 3px;
   color: #c77b42;
   background: #fffaf2d9;
-  font-size: 8px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 1.5px;
   transform: translateY(-50%) rotate(-7deg);
@@ -2656,7 +2656,7 @@ select:focus-visible {
 .cert-preview-note {
   margin: 14px 0 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: var(--fs-xs);
   line-height: 1.6;
   text-align: center;
 }
@@ -2785,7 +2785,7 @@ select:focus-visible {
   display: block;
   margin-top: 3px;
   color: var(--muted);
-  font-size: 6px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 1.35px;
   line-height: 1.35;
@@ -2809,7 +2809,7 @@ select:focus-visible {
 .cert-program-mark small {
   margin-top: 0;
   color: #9f8a66;
-  font-size: 5px;
+  font-size: var(--fs-xs);
   letter-spacing: 0.75px;
 }
 .cert-content {
@@ -2825,7 +2825,7 @@ select:focus-visible {
   justify-content: center;
   gap: 10px;
   color: var(--muted);
-  font-size: 7px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 2px;
 }
@@ -2874,7 +2874,7 @@ select:focus-visible {
   max-width: 470px;
   margin: 0 auto;
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: var(--fs-xs);
   line-height: 1.6;
 }
 .cert-description b {
@@ -2888,7 +2888,7 @@ select:focus-visible {
   gap: 12px;
   margin-top: 13px;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 .cert-achievements span {
@@ -2925,14 +2925,14 @@ select:focus-visible {
 .cert-date-block small,
 .cert-issuer-block small {
   color: var(--muted);
-  font-size: 6px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 1.35px;
 }
 .cert-date-block b,
 .cert-issuer-block b {
   color: var(--text-soft);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 .cert-seal {
@@ -2957,7 +2957,7 @@ select:focus-visible {
 }
 .cert-seal-inner small {
   color: #9b8258;
-  font-size: 4px;
+  font-size: var(--fs-xs);
   font-weight: 800;
   letter-spacing: 1px;
   line-height: 1.1;
@@ -2969,7 +2969,7 @@ select:focus-visible {
   height: 6px;
 }
 .cert-count {
-  font-size: 8px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   letter-spacing: 0.7px;
   font-weight: 800;
@@ -2984,7 +2984,7 @@ select:focus-visible {
   background: #588dd1;
   color: var(--on-primary);
   padding: 10px 13px;
-  font-size: 9px;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 @keyframes record-pulse {
@@ -3094,7 +3094,7 @@ select:focus-visible {
     display: grid;
   }
   .crumb {
-    font-size: 10px;
+    font-size: var(--fs-xs);
   }
   .today-pill {
     display: none;
@@ -3160,14 +3160,14 @@ select:focus-visible {
     width: 15px;
   }
   .stat-tile small {
-    font-size: 6px;
+    font-size: var(--fs-xs);
     letter-spacing: 0.35px;
   }
   .tile-number {
     font-size: 16px;
   }
   .tile-foot {
-    font-size: 7px;
+    font-size: var(--fs-xs);
   }
   .tile-decoration {
     display: none;
@@ -3189,16 +3189,16 @@ select:focus-visible {
     padding: 11px;
   }
   .lesson-detail > p {
-    font-size: 8px;
+    font-size: var(--fs-xs);
   }
   .lesson-detail h3 {
     font-size: 12px;
   }
   .lesson-skills {
-    font-size: 7px;
+    font-size: var(--fs-xs);
   }
   .start-btn {
-    font-size: 8px;
+    font-size: var(--fs-xs);
     padding: 6px;
   }
   .up-next-grid {
@@ -3208,11 +3208,11 @@ select:focus-visible {
     padding-left: 7px;
   }
   .place-caption b {
-    font-size: 8px;
+    font-size: var(--fs-xs);
   }
   .footer {
     padding: 10px 17px 13px;
-    font-size: 7px;
+    font-size: var(--fs-xs);
   }
   .footer > span:last-child {
     display: none;
@@ -3254,7 +3254,7 @@ select:focus-visible {
     padding: 8px 7px;
   }
   .day-card > b {
-    font-size: 8px;
+    font-size: var(--fs-xs);
   }
   .day-icon {
     margin: 8px 0 5px;
@@ -3315,10 +3315,10 @@ select:focus-visible {
     height: 43px;
   }
   .record-hint {
-    font-size: 6px;
+    font-size: var(--fs-xs);
   }
   .lesson-modal-bottom {
-    font-size: 6px;
+    font-size: var(--fs-xs);
     padding: 8px 11px;
   }
   .auth-modal {
@@ -3337,11 +3337,11 @@ select:focus-visible {
     font-size: 19px;
   }
   .welcome-row p {
-    font-size: 9px;
+    font-size: var(--fs-xs);
     max-width: 255px;
   }
   .profile-edit {
-    font-size: 8px;
+    font-size: var(--fs-xs);
   }
   .hero-card {
     height: 217px;
@@ -3358,7 +3358,7 @@ select:focus-visible {
     transform-origin: top right;
   }
   .hero-content p {
-    font-size: 9px;
+    font-size: var(--fs-xs);
   }
   .stats-row {
     gap: 5px;
@@ -3375,10 +3375,10 @@ select:focus-visible {
     font-size: 15px;
   }
   .tile-number span {
-    font-size: 8px;
+    font-size: var(--fs-xs);
   }
   .tile-foot {
-    font-size: 6.5px;
+    font-size: var(--fs-xs);
   }
   .tile-mini-progress {
     width: 28px;
@@ -3388,14 +3388,14 @@ select:focus-visible {
     transform: scale(0.78) rotate(-90deg);
   }
   .tile-mini-progress span {
-    font-size: 7px;
+    font-size: var(--fs-xs);
   }
   .section-title h2,
   .up-next-head h2 {
     font-size: 13px;
   }
   .text-link {
-    font-size: 8px;
+    font-size: var(--fs-xs);
   }
   .lesson-feature {
     grid-template-columns: 34% 1fr;
@@ -3404,23 +3404,23 @@ select:focus-visible {
     padding: 9px;
   }
   .lesson-detail h3 {
-    font-size: 11px;
+    font-size: var(--fs-xs);
   }
   .lesson-detail > p {
-    font-size: 7px;
+    font-size: var(--fs-xs);
   }
   .lesson-skills {
     gap: 4px;
   }
   .start-btn {
     gap: 4px;
-    font-size: 7px;
+    font-size: var(--fs-xs);
   }
   .up-next-grid {
     gap: 5px;
   }
   .place-caption b {
-    font-size: 7px;
+    font-size: var(--fs-xs);
   }
   .footer {
     padding-left: 12px;
@@ -3472,7 +3472,7 @@ select:focus-visible {
   border-radius: 7px;
   padding: 8px;
   margin-top: 8px;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   line-height: 1.45;
   cursor: pointer;
 }
@@ -3502,12 +3502,12 @@ select:focus-visible {
 .locked-message > b {
   max-width: 220px;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: var(--fs-xs);
   line-height: 1.45;
 }
 .locked-message > small {
   color: var(--muted);
-  font-size: 8px;
+  font-size: var(--fs-xs);
   line-height: 1.55;
   max-width: 240px;
   margin: 7px auto 0;
@@ -3519,7 +3519,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin: 0 auto 3px;
 }
@@ -3548,7 +3548,7 @@ select:focus-visible {
   background: var(--surface);
   border-radius: 5px;
   padding: 4px 5px;
-  font-size: 7px;
+  font-size: var(--fs-xs);
   font-weight: 700;
 }
 .streak-milestones .milestone-earned {
