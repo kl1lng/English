@@ -68,3 +68,14 @@ export function pickSession(
 export function dueCount(rows, now = new Date()) {
   return rows.filter((r) => isNew(r) || isDue(r, now)).length;
 }
+
+// Words the learner keeps forgetting: 2+ lapses, or being relearned right now. Never new cards.
+// Most lapses first, then the weakest memory (lowest stability).
+export function hardWords(rows, n = 10) {
+  return rows
+    .filter((r) => !isNew(r) && ((r.lapses || 0) >= 2 || r.state === State.Relearning))
+    .sort((a, b) => (b.lapses || 0) - (a.lapses || 0) || (a.stability || 0) - (b.stability || 0))
+    .slice(0, n);
+}
+
+export const pickHardSession = (rows, size = 10) => hardWords(rows, size);

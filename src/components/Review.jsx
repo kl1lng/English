@@ -4,7 +4,7 @@ import { ArrowRight, Check, Layers, RotateCcw, Volume2, X } from "lucide-react";
 import { buildWordIndex } from "../lib/deck.js";
 import { buildChoices, makeCloze } from "../lib/cloze.js";
 import { makeFixCard } from "../lib/mistakes.js";
-import { dueCount, pickSession, Rating } from "../lib/srs.js";
+import { dueCount, hardWords, pickSession, Rating } from "../lib/srs.js";
 import "./review.css";
 
 const wordIndex = buildWordIndex();
@@ -64,8 +64,9 @@ export default function Review({
   const [results, setResults] = useState([]);
   const shownAt = useRef(0);
 
-  function start() {
-    const session = pickSession(rows, new Date(), {
+  function start(kind) {
+    const hard = kind === "hard";
+    const session = hard ? hardWords(rows, 10) : pickSession(rows, new Date(), {
       size: 10,
       maxNew: 20,
       maxReviews: 100,
@@ -191,6 +192,7 @@ export default function Review({
 
   if (!queue) {
     const due = dueCount(rows);
+    const hardCount = hardWords(rows, 100).length;
     return (
       <section className="review-card review-empty">
         <Layers size={28} aria-hidden="true" />
@@ -203,9 +205,16 @@ export default function Review({
         <p className="review-meta">
           {rows.length} words in your deck · {completedCount} lessons completed
         </p>
-        <button className="review-primary" onClick={start} disabled={!due}>
+        <button className="review-primary" onClick={() => start()} disabled={!due}>
           Start review <ArrowRight size={15} aria-hidden="true" />
         </button>
+        {hardCount > 0 ? (
+          <button className="review-secondary" onClick={() => start("hard")}>
+            Difficult words ({hardCount})
+          </button>
+        ) : (
+          <p className="review-meta">No difficult words yet</p>
+        )}
         {saveError && (
           <p className="review-warn" role="status">
             Some answers could not be saved yet. They will be retried next time.

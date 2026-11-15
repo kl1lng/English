@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { lessons } from "../lessons.js";
 import { buildChoices, makeCloze } from "./cloze.js";
 import { buildWordIndex, customKey, deckKeysForLessons } from "./deck.js";
-import { newCard, pickSession, reviewRow, Rating, wordKey, dueCount } from "./srs.js";
+import { newCard, pickSession, reviewRow, Rating, wordKey, dueCount, hardWords, pickHardSession, State } from "./srs.js";
 
 const now = new Date("2026-11-14T10:00:00Z");
 
@@ -103,5 +103,29 @@ describe("cloze", () => {
     expect(options.length).toBe(4);
     expect(new Set(options).size).toBe(4);
     expect(options).toContain("diverse");
+  });
+});
+
+describe("hardWords", () => {
+  const card = (key, fields) => ({ ...newCard(now), word_key: key, ...fields });
+  const rows = [
+    card("new", { state: State.New, lapses: 5 }),
+    card("easy", { state: State.Review, lapses: 0, stability: 30 }),
+    card("two", { state: State.Review, lapses: 2, stability: 5 }),
+    card("three", { state: State.Review, lapses: 3, stability: 9 }),
+    card("relearn", { state: State.Relearning, lapses: 1, stability: 1 }),
+    card("two-weak", { state: State.Review, lapses: 2, stability: 2 }),
+  ];
+  it("returns cards with 2+ lapses or relearning, never new ones", () => {
+    expect(hardWords(rows).map((r) => r.word_key)).toEqual(["three", "two-weak", "two", "relearn"]);
+  });
+  it("limits the list, leaves the input alone and handles no cards", () => {
+    const copy = JSON.stringify(rows);
+    expect(hardWords(rows, 2)).toHaveLength(2);
+    expect(JSON.stringify(rows)).toBe(copy);
+    expect(hardWords([])).toEqual([]);
+  });
+  it("builds a session of the requested size", () => {
+    expect(pickHardSession(rows, 3)).toHaveLength(3);
   });
 });
