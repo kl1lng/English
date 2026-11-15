@@ -1,4 +1,4 @@
-import manifest from "../data/audio-manifest.json";
+import manifest from "../data/audio-manifest.js";
 
 // Recorded word pronunciations live in public/audio (file name = lowercase word, spaces as "-").
 // A few recordings were saved under another name; the aliases map the word to the file.

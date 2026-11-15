@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { lessons } from "../lessons.js";
-import manifest from "../data/audio-manifest.json";
+import manifest from "../data/audio-manifest.js";
 import { AUDIO_ALIASES, audioBase, audioPath, hasRecording } from "./audio.js";
 
 const audioDir = path.resolve(__dirname, "../../public/audio");
