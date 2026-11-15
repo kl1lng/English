@@ -88,6 +88,13 @@ describe("cloze", () => {
     });
     expect(makeCloze("Landscapes change fast.", "landscape").text).toBe("_____ change fast.");
   });
+  it("blanks words with a hyphen or a space", () => {
+    expect(makeCloze("The water looks crystal-clear.", "crystal-clear")).toEqual({
+      text: "The water looks _____.",
+      answer: "crystal-clear",
+    });
+    expect(makeCloze("It is a National Park.", "national park").text).toBe("It is a _____.");
+  });
   it("returns null when the word is not in the sentence", () => {
     expect(makeCloze("Nothing here.", "heritage")).toBeNull();
   });

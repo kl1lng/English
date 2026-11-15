@@ -8,7 +8,7 @@ export function makeCloze(example, term) {
   const text = String(example);
   const target = term.toLocaleLowerCase("en").replace(APOSTROPHES, "");
   if (!target) return null;
-  if (target.includes(" ")) {
+  if (target.includes(" ") || target.includes("-")) {
     const at = text.toLocaleLowerCase("en").indexOf(term.toLocaleLowerCase("en"));
     if (at < 0) return null;
     return {
