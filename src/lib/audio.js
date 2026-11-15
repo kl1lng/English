@@ -1,0 +1,36 @@
+// Recorded word pronunciations live in public/audio (file name = lowercase word, spaces as "-").
+// A few recordings were saved under another name; the aliases map the word to the file.
+export const AUDIO_ALIASES = {
+  capital: "capital-2day",
+  landmark: "landmark-2day",
+  modern: "modern-2day",
+  "rapidly-developing": "rapidly-developing-2day",
+  impressive: "impressive-2day",
+  surrounded: "surrounded-3day",
+  mountainous: "mountainous-3day",
+  vibrant: "vibrant-3day",
+  atmosphere: "atmosphere-3day",
+  attraction: "attraction-3day",
+  "former-capital": "former-capital-3day",
+  civilisation: "civilization",
+  ingredient: "ingredients",
+  archaeological: "archeological",
+};
+
+const slug = (term) => term.trim().toLowerCase().replace(/\s+/g, "-");
+
+export const audioBase = (term) => AUDIO_ALIASES[slug(term)] || slug(term);
+export const audioPath = (term) => `/audio/${audioBase(term)}.m4a`;
+
+// Plays the recording; if there is none, the browser reads the word aloud instead.
+export function speakWord(term) {
+  const fallback = () => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    const utter = new SpeechSynthesisUtterance(term);
+    utter.lang = "en-US";
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+  };
+  const audio = new Audio(audioPath(term));
+  audio.play().catch(fallback);
+}
